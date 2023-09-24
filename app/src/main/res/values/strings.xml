@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Zaragoza Contest</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email_input">Correo Electrónico</string>
+    <string name="password_input">Password</string>
+    <string name="action_sign_in">Continuar</string>
+    <string name="action_create_user">Nuevo Usuario</string>
+    <string name="msg_create_new_user">¿Aún no tienes tu propia cuenta?</string>
+    <string name="btn_action_register">Aceptar</string>
+    <string name="confirm_password_input">Confirmar password</string>
+    <string name="nickname_input">Nickname</string>
 </resources>
