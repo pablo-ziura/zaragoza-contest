@@ -1,4 +1,4 @@
-package com.zaragoza.contest.model
+package com.zaragoza.contest.utils
 
 sealed class ResourceState<T> {
     class Loading<T> : ResourceState<T>()

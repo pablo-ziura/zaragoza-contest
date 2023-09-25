@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.zaragoza.contest.databinding.FragmentRegisterBinding
-import com.zaragoza.contest.model.User
+import com.zaragoza.contest.domain.model.User
 import com.zaragoza.contest.ui.viewmodel.CreateUserState
 import com.zaragoza.contest.ui.viewmodel.UserViewModel
 import org.koin.androidx.viewmodel.ext.android.activityViewModel

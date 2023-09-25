@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zaragoza.contest.domain.model.User
 import com.zaragoza.contest.domain.usecase.CreateUserUseCase
-import com.zaragoza.contest.model.ResourceState
-import com.zaragoza.contest.model.User
+import com.zaragoza.contest.utils.ResourceState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

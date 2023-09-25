@@ -1,7 +1,7 @@
 package com.zaragoza.contest.di
 
 import com.google.firebase.auth.FirebaseAuth
-import com.zaragoza.contest.data.user.UserDataImpl
+import com.zaragoza.contest.data.user.UserRepositoryImpl
 import com.zaragoza.contest.data.user.remote.UserRemoteImpl
 import com.zaragoza.contest.domain.UserRepository
 import com.zaragoza.contest.domain.usecase.CreateUserUseCase
@@ -15,7 +15,7 @@ val userModule = module {
         UserRemoteImpl(get())
     }
     factory<UserRepository> {
-        UserDataImpl(get())
+        UserRepositoryImpl(get())
     }
     factory { CreateUserUseCase(get()) }
     viewModel {

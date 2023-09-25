@@ -1,7 +1,7 @@
-package com.zaragoza.contest.model
+package com.zaragoza.contest.domain.model
 
 data class User(
-    val id: String,
+    var id: String,
     val email: String,
     val password: String,
     val nickname: String,

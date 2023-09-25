@@ -1,7 +1,7 @@
 package com.zaragoza.contest.domain.usecase
 
 import com.zaragoza.contest.domain.UserRepository
-import com.zaragoza.contest.model.User
+import com.zaragoza.contest.domain.model.User
 
 class CreateUserUseCase(private val userRepository: UserRepository) {
 
