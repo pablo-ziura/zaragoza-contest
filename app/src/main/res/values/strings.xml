@@ -9,4 +9,5 @@
     <string name="btn_action_register">Aceptar</string>
     <string name="confirm_password_input">Confirmar password</string>
     <string name="nickname_input">Nickname</string>
+    <string name="title_activity_scores">ScoresActivity</string>
 </resources>

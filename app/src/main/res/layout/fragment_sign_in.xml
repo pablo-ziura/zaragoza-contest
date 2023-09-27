@@ -6,7 +6,7 @@
     android:padding="16dp">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/et_edit_mail_register"
+        android:id="@+id/et_input_mail_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="96dp"
@@ -20,15 +20,16 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/til_edit_mail_register"
+            android:id="@+id/til_input_mail_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:maxLength="50" />
+            android:maxLength="50"
+            android:text="pablokotlin@gmail.com" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/et_confirm_password_register"
+        android:id="@+id/et_input_password_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password_input"
@@ -38,10 +39,10 @@
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_edit_mail_register">
+        app:layout_constraintTop_toBottomOf="@+id/et_input_mail_register">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/til_confirm_password_register"
+            android:id="@+id/til_input_password_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
@@ -49,7 +50,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_action_register"
+        android:id="@+id/btn_action_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
@@ -60,7 +61,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_confirm_password_register"
+        app:layout_constraintTop_toBottomOf="@+id/et_input_password_register"
         app:layout_constraintVertical_bias="0.2" />
 
     <TextView

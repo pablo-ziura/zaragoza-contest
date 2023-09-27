@@ -9,4 +9,12 @@ class UserRepositoryImpl(private val userRemote: UserRemoteImpl) : UserRepositor
     override fun createUser(user: User) {
         userRemote.createUser(user)
     }
+
+    override fun checkUser(userEmail: String, userPassword: String) {
+        userRemote.checkUser(userEmail, userPassword)
+    }
+
+    override fun getUserInfo(userId: String): User {
+        return userRemote.getUserInfo(userId)
+    }
 }

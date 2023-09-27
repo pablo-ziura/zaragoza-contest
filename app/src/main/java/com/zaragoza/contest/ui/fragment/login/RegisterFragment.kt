@@ -1,15 +1,18 @@
 package com.zaragoza.contest.ui.fragment.login
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.zaragoza.contest.databinding.FragmentRegisterBinding
 import com.zaragoza.contest.domain.model.User
+import com.zaragoza.contest.ui.MainActivity
 import com.zaragoza.contest.ui.viewmodel.CreateUserState
 import com.zaragoza.contest.ui.viewmodel.UserViewModel
+import com.zaragoza.contest.utils.ResourceState
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class RegisterFragment : Fragment() {
@@ -30,8 +33,10 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initViewModel()
-        _binding?.btnActionRegister?.setOnClickListener {
+
+        _binding?.btnActionSignIn?.setOnClickListener {
             createUser()
         }
     }
@@ -43,13 +48,30 @@ class RegisterFragment : Fragment() {
     }
 
     private fun handleUserCreationState(state: CreateUserState) {
-        Log.i("USER STATE", state.toString())
+        when (state) {
+            is ResourceState.Loading -> {
+                //
+            }
+
+            is ResourceState.Success -> {
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                startActivity(intent)
+            }
+
+            is ResourceState.Error -> {
+                Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
+            }
+
+            is ResourceState.None -> {
+                //
+            }
+        }
     }
 
     private fun createUser() {
         val userNickname = binding.tilEditNicknameRegister.text.toString()
         val userPassword = binding.tilEditPasswordRegister.text.toString()
-        val userEmail = binding.tilEditMailRegister.text.toString()
+        val userEmail = binding.tilInputPasswordRegister.text.toString()
 
         userViewModel.createUser(
             User(
