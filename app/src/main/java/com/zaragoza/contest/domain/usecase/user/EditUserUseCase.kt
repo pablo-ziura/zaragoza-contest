@@ -1,4 +1,4 @@
-package com.zaragoza.contest.domain.usecase
+package com.zaragoza.contest.domain.usecase.user
 
 import com.zaragoza.contest.domain.UserRepository
 

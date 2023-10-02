@@ -4,7 +4,7 @@ import com.zaragoza.contest.domain.model.User
 
 
 interface UserRepository {
-    fun createUser(user: User)
-    fun checkUser(userEmail: String, userPassword: String)
-    fun getUserInfo(userId: String): User
+    suspend fun createUser(user: User)
+    suspend fun checkUser(userEmail: String, userPassword: String)
+    suspend fun getUserInfo(userId: String): User?
 }

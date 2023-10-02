@@ -1,4 +1,4 @@
-package com.zaragoza.contest.ui.ui.theme
+package com.zaragoza.contest.ui.compose.theme
 
 import androidx.compose.ui.graphics.Color
 

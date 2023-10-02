@@ -6,15 +6,15 @@ import com.zaragoza.contest.domain.model.User
 
 class UserRepositoryImpl(private val userRemote: UserRemoteImpl) : UserRepository {
 
-    override fun createUser(user: User) {
+    override suspend fun createUser(user: User) {
         userRemote.createUser(user)
     }
 
-    override fun checkUser(userEmail: String, userPassword: String) {
+    override suspend fun checkUser(userEmail: String, userPassword: String) {
         userRemote.checkUser(userEmail, userPassword)
     }
 
-    override fun getUserInfo(userId: String): User {
+    override suspend fun getUserInfo(userId: String): User? {
         return userRemote.getUserInfo(userId)
     }
 }

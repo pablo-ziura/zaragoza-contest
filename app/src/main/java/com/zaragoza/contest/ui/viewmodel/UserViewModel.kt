@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zaragoza.contest.domain.model.User
-import com.zaragoza.contest.domain.usecase.CheckUserUseCase
-import com.zaragoza.contest.domain.usecase.CreateUserUseCase
-import com.zaragoza.contest.domain.usecase.GetUserInfoUseCase
+import com.zaragoza.contest.domain.usecase.user.CheckUserUseCase
+import com.zaragoza.contest.domain.usecase.user.CreateUserUseCase
+import com.zaragoza.contest.domain.usecase.user.GetUserInfoUseCase
 import com.zaragoza.contest.utils.ResourceState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -77,7 +77,7 @@ class UserViewModel(
                 val user = getUserInfoUseCase.execute(userId)
 
                 withContext(Dispatchers.Main) {
-                    _getUserInfoLiveData.value = ResourceState.Success(user)
+                    _getUserInfoLiveData.value = ResourceState.Success(user!!)
                     _getUserInfoLiveData.value = ResourceState.None()
                 }
             } catch (e: Exception) {
