@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.zaragoza.contest.databinding.FragmentRegisterBinding
-import com.zaragoza.contest.domain.model.User
-import com.zaragoza.contest.ui.MainActivity
+import com.zaragoza.contest.model.User
+import com.zaragoza.contest.ui.MenuActivity
+import com.zaragoza.contest.ui.common.ResourceState
 import com.zaragoza.contest.ui.viewmodel.CreateUserState
 import com.zaragoza.contest.ui.viewmodel.UserViewModel
-import com.zaragoza.contest.utils.ResourceState
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class RegisterFragment : Fragment() {
@@ -54,7 +54,7 @@ class RegisterFragment : Fragment() {
             }
 
             is ResourceState.Success -> {
-                val intent = Intent(requireContext(), MainActivity::class.java)
+                val intent = Intent(requireContext(), MenuActivity::class.java)
                 startActivity(intent)
             }
 

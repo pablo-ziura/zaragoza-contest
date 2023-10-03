@@ -1,6 +1,7 @@
-package com.zaragoza.contest.ui.fragment.main
+package com.zaragoza.contest.ui.fragment.menu
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,11 @@ class MenuFragment : Fragment() {
 
         binding.btnProfileMenu.setOnClickListener {
             findNavController().navigate(R.id.action_menuFragment_to_profileFragment)
+        }
+
+        binding.btnStartContestMenu.setOnClickListener {
+            Log.i("PULSAR JUGAR", "PULSAR JUGAR")
+            findNavController().navigate(R.id.action_menuFragment_to_questionListFragment)
         }
 
     }

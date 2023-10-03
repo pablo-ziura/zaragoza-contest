@@ -5,7 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.zaragoza.contest.domain.model.Question
+import com.zaragoza.contest.model.Question
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -18,15 +18,22 @@ class QuestionRemoteImpl {
         val questionRef = database.getReference("Questions")
         questionRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val questions = dataSnapshot.getValue(listOf<Question>()::class.java)
+                val questions = mutableListOf<Question>()
+
+                dataSnapshot.children.forEach { questionSnapshot ->
+                    val question = questionSnapshot.getValue(Question::class.java)
+                    if (question != null) {
+                        questions.add(question)
+                    }
+                }
+
                 continuation.resume(questions)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w("USER INFO", "getUserInfo:onCancelled", databaseError.toException())
-                continuation.resume(null)
+                continuation.resume(emptyList()) // You can choose how to handle errors here
             }
         })
     }
-
 }

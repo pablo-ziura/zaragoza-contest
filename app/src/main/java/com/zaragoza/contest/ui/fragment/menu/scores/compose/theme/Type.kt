@@ -1,4 +1,4 @@
-package com.zaragoza.contest.ui.compose.theme
+package com.zaragoza.contest.ui.fragment.menu.scores.compose.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

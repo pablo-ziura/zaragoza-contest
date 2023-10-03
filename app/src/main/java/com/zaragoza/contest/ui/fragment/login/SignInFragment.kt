@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.zaragoza.contest.R
 import com.zaragoza.contest.databinding.FragmentSignInBinding
-import com.zaragoza.contest.ui.MainActivity
+import com.zaragoza.contest.ui.MenuActivity
+import com.zaragoza.contest.ui.common.ResourceState
 import com.zaragoza.contest.ui.viewmodel.CheckUserState
 import com.zaragoza.contest.ui.viewmodel.UserViewModel
-import com.zaragoza.contest.utils.ResourceState
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class SignInFragment : Fragment() {
@@ -61,7 +61,7 @@ class SignInFragment : Fragment() {
             }
 
             is ResourceState.Success -> {
-                val intent = Intent(requireContext(), MainActivity::class.java)
+                val intent = Intent(requireContext(), MenuActivity::class.java)
                 startActivity(intent)
             }
 

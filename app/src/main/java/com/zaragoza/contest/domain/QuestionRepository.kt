@@ -1,6 +1,6 @@
 package com.zaragoza.contest.domain
 
-import com.zaragoza.contest.domain.model.Question
+import com.zaragoza.contest.model.Question
 
 interface QuestionRepository {
 

@@ -1,9 +1,10 @@
 package com.zaragoza.contest.data.question
 
+import com.zaragoza.contest.data.question.remote.QuestionRemoteImpl
 import com.zaragoza.contest.domain.QuestionRepository
-import com.zaragoza.contest.domain.model.Question
+import com.zaragoza.contest.model.Question
 
-class QuestionRepositoryImpl(private val questionRemote: QuestionRepository) : QuestionRepository {
+class QuestionDataRepository(private val questionRemote: QuestionRemoteImpl) : QuestionRepository {
     override suspend fun getQuestionList(): List<Question> {
         return questionRemote.getQuestionList()
     }

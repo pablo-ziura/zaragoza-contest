@@ -4,15 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zaragoza.contest.domain.model.Question
 import com.zaragoza.contest.domain.usecase.question.GetQuestionListUseCase
-import com.zaragoza.contest.utils.ResourceState
+import com.zaragoza.contest.model.Question
+import com.zaragoza.contest.ui.common.ResourceState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 typealias GetQuestionListState = ResourceState<List<Question>>
-
 
 class QuestionViewModel(
     private val getQuestionListUseCase: GetQuestionListUseCase
@@ -21,8 +20,7 @@ class QuestionViewModel(
     private val _getQuestionListLiveData = MutableLiveData<GetQuestionListState>()
     val getQuestionListLiveData: LiveData<GetQuestionListState> get() = _getQuestionListLiveData
 
-    suspend fun getQuestionList() {
-
+    fun getQuestionList() {
         _getQuestionListLiveData.value = ResourceState.Loading()
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -31,12 +29,13 @@ class QuestionViewModel(
 
                 withContext(Dispatchers.Main) {
                     _getQuestionListLiveData.value = ResourceState.Success(notes)
+                    _getQuestionListLiveData.value = ResourceState.None()
                 }
             } catch (e: Exception) {
                 _getQuestionListLiveData.value = ResourceState.Error(e.localizedMessage.orEmpty())
+                _getQuestionListLiveData.value = ResourceState.None()
             }
         }
-
 
     }
 

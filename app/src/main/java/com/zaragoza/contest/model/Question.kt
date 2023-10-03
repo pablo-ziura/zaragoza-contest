@@ -1,7 +1,7 @@
-package com.zaragoza.contest.domain.model
+package com.zaragoza.contest.model
 
 data class Question(
-    var id: String = "",
+    var id: Int = -1,
     val statement: String = "",
     val firstAnswer: String = "",
     val secondAnswer: String = "",

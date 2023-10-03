@@ -1,4 +1,4 @@
-package com.zaragoza.contest.ui.fragment.main
+package com.zaragoza.contest.ui.fragment.menu.profile
 
 import android.Manifest
 import android.content.ContentValues
@@ -22,10 +22,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.zaragoza.contest.databinding.FragmentProfileBinding
-import com.zaragoza.contest.domain.model.User
+import com.zaragoza.contest.model.User
+import com.zaragoza.contest.ui.common.ResourceState
 import com.zaragoza.contest.ui.viewmodel.GetUserInfoState
 import com.zaragoza.contest.ui.viewmodel.UserViewModel
-import com.zaragoza.contest.utils.ResourceState
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import java.util.Locale
 
@@ -57,12 +57,12 @@ class ProfileFragment : Fragment() {
 
     private fun initViewModel() {
         userViewModel.getUserInfoLiveData.observe(viewLifecycleOwner) { state ->
-            handleUGetUserInfoState(state)
+            handleGetUserInfoState(state)
         }
         userViewModel.getUserInfo("2WTr1lvoeVO5RPa6EQ3iOPgcr2R2")
     }
 
-    private fun handleUGetUserInfoState(state: GetUserInfoState) {
+    private fun handleGetUserInfoState(state: GetUserInfoState) {
         when (state) {
             is ResourceState.Loading -> {
                 //

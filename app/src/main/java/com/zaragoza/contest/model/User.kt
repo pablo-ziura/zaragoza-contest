@@ -1,4 +1,4 @@
-package com.zaragoza.contest.domain.model
+package com.zaragoza.contest.model
 
 data class User(
     var id: String = "",

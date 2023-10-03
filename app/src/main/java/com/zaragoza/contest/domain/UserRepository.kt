@@ -1,6 +1,6 @@
 package com.zaragoza.contest.domain
 
-import com.zaragoza.contest.domain.model.User
+import com.zaragoza.contest.model.User
 
 
 interface UserRepository {

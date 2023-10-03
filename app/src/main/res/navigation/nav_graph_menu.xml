@@ -7,19 +7,44 @@
 
     <fragment
         android:id="@+id/menuFragment"
-        android:name="com.zaragoza.contest.ui.fragment.main.MenuFragment"
+        android:name="com.zaragoza.contest.ui.fragment.menu.MenuFragment"
         android:label="menuFragment"
         tools:layout="@layout/fragment_menu">
         <action
             android:id="@+id/action_menuFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_questionListFragment"
+            app:destination="@id/questionListFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.zaragoza.contest.ui.fragment.main.ProfileFragment"
+        android:name="com.zaragoza.contest.ui.fragment.menu.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/questionListFragment"
+        android:name="com.zaragoza.contest.ui.fragment.menu.game.QuestionListFragment"
+        android:label="fragment_question_list"
+        tools:layout="@layout/fragment_question_list">
+        <action
+            android:id="@+id/action_questionListFragment_to_questionDetailFragment"
+            app:destination="@id/questionDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/questionDetailFragment"
+        android:name="com.zaragoza.contest.ui.fragment.menu.game.QuestionDetailFragment"
+        android:label="fragment_question_detail"
+        tools:layout="@layout/fragment_question_detail">
+
+        <argument
+            android:name="questionId"
+            app:argType="integer" />
+
+    </fragment>
 
 
 </navigation>

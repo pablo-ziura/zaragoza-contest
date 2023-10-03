@@ -1,4 +1,4 @@
-package com.zaragoza.contest.utils
+package com.zaragoza.contest.ui.common
 
 sealed class ResourceState<T> {
     class Loading<T> : ResourceState<T>()

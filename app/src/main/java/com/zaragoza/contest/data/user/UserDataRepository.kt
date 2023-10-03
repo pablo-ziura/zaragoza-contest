@@ -2,9 +2,9 @@ package com.zaragoza.contest.data.user
 
 import com.zaragoza.contest.data.user.remote.UserRemoteImpl
 import com.zaragoza.contest.domain.UserRepository
-import com.zaragoza.contest.domain.model.User
+import com.zaragoza.contest.model.User
 
-class UserRepositoryImpl(private val userRemote: UserRemoteImpl) : UserRepository {
+class UserDataRepository(private val userRemote: UserRemoteImpl) : UserRepository {
 
     override suspend fun createUser(user: User) {
         userRemote.createUser(user)

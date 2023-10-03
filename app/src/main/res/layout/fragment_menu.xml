@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ui.fragment.main.MenuFragment">
+    tools:context=".ui.fragment.menu.MenuFragment">
 
 
     <com.google.android.material.button.MaterialButton
@@ -15,15 +15,16 @@
         android:text="Perfil" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_start_contest_menu"
+        android:id="@+id/btn_best_scores_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ranking" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_best_scores_menu"
+        android:id="@+id/btn_start_contest_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Jugar" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
+
