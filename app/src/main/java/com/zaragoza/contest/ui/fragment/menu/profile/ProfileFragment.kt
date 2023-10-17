@@ -59,7 +59,10 @@ class ProfileFragment : Fragment() {
         userViewModel.getUserInfoLiveData.observe(viewLifecycleOwner) { state ->
             handleGetUserInfoState(state)
         }
-        userViewModel.getUserInfo("2WTr1lvoeVO5RPa6EQ3iOPgcr2R2")
+        val userId = userViewModel.fetchUserId()
+        if (userId != null) {
+            userViewModel.getUserInfo(userId)
+        }
     }
 
     private fun handleGetUserInfoState(state: GetUserInfoState) {

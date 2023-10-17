@@ -4,7 +4,7 @@ import com.zaragoza.contest.domain.UserRepository
 
 class CheckUserUseCase(private val userRepository: UserRepository) {
 
-    suspend fun execute(userEmail: String, userPassword: String) {
-        userRepository.checkUser(userEmail, userPassword)
+    suspend fun execute(userEmail: String, userPassword: String): String? {
+        return userRepository.checkUser(userEmail, userPassword)
     }
 }

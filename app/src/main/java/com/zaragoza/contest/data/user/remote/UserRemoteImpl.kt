@@ -1,6 +1,7 @@
 package com.zaragoza.contest.data.user.remote
 
 import android.util.Log
+import at.favre.lib.crypto.bcrypt.BCrypt
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,20 +22,23 @@ class UserRemoteImpl(private val firebaseAuth: FirebaseAuth) {
                 firebaseAuth.createUserWithEmailAndPassword(user.email, user.password).await()
             val uid = result.user?.uid ?: throw IllegalStateException("UID no puede ser null")
             user.id = uid
-            val userRef = database.getReference("Users").child(user.email)
+            val bcryptHash = BCrypt.withDefaults().hashToString(12, user.password.toCharArray())
+            user.password = bcryptHash
+            val userRef = database.getReference("Users").child(uid)
             userRef.setValue(user).await()
-            Log.i("USER CREATION", "Usuario creado en Auth y Realtime Database")
         } catch (e: Exception) {
             Log.i("USER CREATION", "ERROR: ${e.message}")
         }
     }
 
-    suspend fun checkUser(userEmail: String, userPassword: String) {
+    suspend fun checkUser(userEmail: String, userPassword: String): String? {
         try {
-            firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword).await()
-            Log.i("USER SIGN IN", "signInWithEmail:success")
+            val result = firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword).await()
+            val user = result.user
+            return user?.uid
         } catch (e: Exception) {
             Log.i("USER SIGN IN", "ERROR: ${e.message}")
+            return null
         }
     }
 

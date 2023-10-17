@@ -1,6 +1,6 @@
 package com.zaragoza.contest.ui.fragment.login
 
-import android.content.Intent
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.zaragoza.contest.databinding.FragmentRegisterBinding
 import com.zaragoza.contest.model.User
-import com.zaragoza.contest.ui.MenuActivity
 import com.zaragoza.contest.ui.common.ResourceState
 import com.zaragoza.contest.ui.viewmodel.CreateUserState
 import com.zaragoza.contest.ui.viewmodel.UserViewModel
@@ -37,7 +36,9 @@ class RegisterFragment : Fragment() {
         initViewModel()
 
         _binding?.btnActionSignIn?.setOnClickListener {
-            createUser()
+            if (validateInputs()) {
+                createUser()
+            }
         }
     }
 
@@ -54,8 +55,13 @@ class RegisterFragment : Fragment() {
             }
 
             is ResourceState.Success -> {
-                val intent = Intent(requireContext(), MenuActivity::class.java)
-                startActivity(intent)
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Nuevo Usuario")
+                    .setMessage("¡Usuario creado con éxito!")
+                    .setPositiveButton("OK") { _, _ ->
+                        parentFragmentManager.popBackStack()
+                    }
+                    .show()
             }
 
             is ResourceState.Error -> {
@@ -71,7 +77,7 @@ class RegisterFragment : Fragment() {
     private fun createUser() {
         val userNickname = binding.tilEditNicknameRegister.text.toString()
         val userPassword = binding.tilEditPasswordRegister.text.toString()
-        val userEmail = binding.tilInputPasswordRegister.text.toString()
+        val userEmail = binding.tilInputMailRegister.text.toString()
 
         userViewModel.createUser(
             User(
@@ -81,6 +87,42 @@ class RegisterFragment : Fragment() {
                 password = userPassword
             )
         )
+    }
+
+    private fun validateInputs(): Boolean {
+        val userNickname = binding.tilEditNicknameRegister.text.toString()
+        val userPassword = binding.tilEditPasswordRegister.text.toString()
+        val userConfirmPassword = binding.tilConfirmPasswordRegister.text.toString()
+        val userEmail = binding.tilInputMailRegister.text.toString()
+
+        if (userNickname.isBlank() || userPassword.isBlank() || userConfirmPassword.isBlank() || userEmail.isBlank()) {
+            Toast.makeText(requireContext(), "Debe rellenar todos los campos", Toast.LENGTH_LONG)
+                .show()
+            return false
+        }
+
+        if (userPassword != userConfirmPassword) {
+            Toast.makeText(requireContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG)
+                .show()
+            return false
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+            Toast.makeText(requireContext(), "Formato de e-mail incorrecto", Toast.LENGTH_LONG)
+                .show()
+            return false
+        }
+
+        if (userPassword.length < 6) {
+            Toast.makeText(
+                requireContext(),
+                "La contraseña debe tener al menos 6 caracteres",
+                Toast.LENGTH_LONG
+            ).show()
+            return false
+        }
+
+        return true
     }
 
     override fun onDestroyView() {

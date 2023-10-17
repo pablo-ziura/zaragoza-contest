@@ -41,8 +41,9 @@
         tools:layout="@layout/fragment_question_detail">
 
         <argument
-            android:name="questionId"
-            app:argType="integer" />
+            android:name="question"
+            app:argType="com.zaragoza.contest.model.Question"
+            app:nullable="false" />
 
     </fragment>
 

@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zaragoza.contest.domain.usecase.user.CheckUserUseCase
 import com.zaragoza.contest.domain.usecase.user.CreateUserUseCase
+import com.zaragoza.contest.domain.usecase.user.FetchUserIdUseCase
 import com.zaragoza.contest.domain.usecase.user.GetUserInfoUseCase
+import com.zaragoza.contest.domain.usecase.user.SaveUserIdUseCase
 import com.zaragoza.contest.model.User
 import com.zaragoza.contest.ui.common.ResourceState
 import kotlinx.coroutines.Dispatchers
@@ -14,13 +16,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 typealias CreateUserState = ResourceState<Void?>
-typealias CheckUserState = ResourceState<Void?>
+typealias CheckUserState = ResourceState<String?>
 typealias GetUserInfoState = ResourceState<User>
 
 class UserViewModel(
     private val createUserUseCase: CreateUserUseCase,
     private val checkUserUseCase: CheckUserUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val saveUserIdUseCase: SaveUserIdUseCase,
+    private val fetchUserIdUseCase: FetchUserIdUseCase
 ) : ViewModel() {
 
     private val _createUserLiveData = MutableLiveData<CreateUserState>()
@@ -56,14 +60,20 @@ class UserViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                checkUserUseCase.execute(userEmail, userPassword)
+                val userId = checkUserUseCase.execute(userEmail, userPassword)
                 withContext(Dispatchers.Main) {
-                    _checkUserLiveData.value = ResourceState.Success(null)
+                    if (userId != null) {
+                        _checkUserLiveData.value = ResourceState.Success(userId)
+                    } else {
+                        _checkUserLiveData.value = ResourceState.Error("User ID null")
+                    }
                     _checkUserLiveData.value = ResourceState.None()
                 }
             } catch (e: Exception) {
-                _checkUserLiveData.value = ResourceState.Error(e.localizedMessage.orEmpty())
-                _checkUserLiveData.value = ResourceState.None()
+                withContext(Dispatchers.Main) {
+                    _checkUserLiveData.value = ResourceState.Error(e.localizedMessage.orEmpty())
+                    _checkUserLiveData.value = ResourceState.None()
+                }
             }
         }
     }
@@ -85,6 +95,19 @@ class UserViewModel(
                 _getUserInfoLiveData.value = ResourceState.None()
             }
         }
+    }
+
+    fun saveUserId(userId: String): ResourceState<Void?> {
+        return try {
+            saveUserIdUseCase.execute(userId)
+            ResourceState.Success(null)
+        } catch (e: Exception) {
+            ResourceState.Error(e.localizedMessage.orEmpty())
+        }
+    }
+
+    fun fetchUserId(): String? {
+        return fetchUserIdUseCase.execute()
     }
 
 }

@@ -1,5 +1,9 @@
 package com.zaragoza.contest.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Question(
     var id: Int = -1,
     val statement: String = "",
@@ -9,4 +13,4 @@ data class Question(
     val fourthAnswer: String = "",
     val rightAnswer: Int = -1,
     val isSolved: Int = -1
-)
+) : Parcelable

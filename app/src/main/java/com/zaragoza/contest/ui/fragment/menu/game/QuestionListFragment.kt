@@ -39,7 +39,7 @@ class QuestionListFragment : Fragment() {
         questionListAdapter.onClickListener = { question ->
             findNavController().navigate(
                 QuestionListFragmentDirections.actionQuestionListFragmentToQuestionDetailFragment(
-                    question.id
+                    question
                 )
             )
         }
