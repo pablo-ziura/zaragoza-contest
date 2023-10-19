@@ -1,9 +1,9 @@
 package com.zaragoza.contest.domain.usecase.user
 
-import com.zaragoza.contest.domain.UserPreferences
+import com.zaragoza.contest.domain.UserRepository
 
-class SaveUserIdUseCase(private val userPreferences: UserPreferences) {
+class SaveUserIdUseCase(private val userRepository: UserRepository) {
     fun execute(userId: String) {
-        userPreferences.saveUserId(userId)
+        userRepository.saveUserId(userId)
     }
 }

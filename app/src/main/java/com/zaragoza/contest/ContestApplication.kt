@@ -12,6 +12,7 @@ class ContestApplication : Application(), CameraXConfig.Provider {
     override fun onCreate() {
         super.onCreate()
         startKoin {
+            printLogger()
             androidContext(this@ContestApplication)
             modules(userModule, questionModule).allowOverride(true)
         }

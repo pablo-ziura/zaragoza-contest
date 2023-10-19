@@ -1,13 +1,13 @@
 package com.zaragoza.contest.data.user
 
 import com.zaragoza.contest.data.user.remote.UserRemoteImpl
-import com.zaragoza.contest.domain.UserPreferences
+import com.zaragoza.contest.data.user.storage.UserPreferencesManager
 import com.zaragoza.contest.domain.UserRepository
 import com.zaragoza.contest.model.User
 
 class UserDataRepository(
     private val userRemote: UserRemoteImpl,
-    private val userPreferences: UserPreferences
+    private val userPreferences: UserPreferencesManager
 ) : UserRepository {
 
     override suspend fun createUser(user: User) {
@@ -22,11 +22,12 @@ class UserDataRepository(
         return userRemote.getUserInfo(userId)
     }
 
-    fun saveUserId(userId: String) {
+    override fun saveUserId(userId: String) {
         userPreferences.saveUserId(userId)
     }
 
-    fun fetchUserId(): String? {
+    override fun fetchUserId(): String? {
         return userPreferences.fetchUserId()
     }
+
 }

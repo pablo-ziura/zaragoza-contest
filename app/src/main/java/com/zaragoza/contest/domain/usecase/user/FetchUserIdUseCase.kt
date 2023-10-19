@@ -1,9 +1,9 @@
 package com.zaragoza.contest.domain.usecase.user
 
-import com.zaragoza.contest.domain.UserPreferences
+import com.zaragoza.contest.domain.UserRepository
 
-class FetchUserIdUseCase(private val userPreferences: UserPreferences) {
+class FetchUserIdUseCase(private val userRepository: UserRepository) {
     fun execute(): String? {
-        return userPreferences.fetchUserId()
+        return userRepository.fetchUserId()
     }
 }

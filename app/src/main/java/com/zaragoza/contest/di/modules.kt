@@ -7,7 +7,6 @@ import com.zaragoza.contest.data.user.UserDataRepository
 import com.zaragoza.contest.data.user.remote.UserRemoteImpl
 import com.zaragoza.contest.data.user.storage.UserPreferencesManager
 import com.zaragoza.contest.domain.QuestionRepository
-import com.zaragoza.contest.domain.UserPreferences
 import com.zaragoza.contest.domain.UserRepository
 import com.zaragoza.contest.domain.usecase.question.GetQuestionListUseCase
 import com.zaragoza.contest.domain.usecase.user.CheckUserUseCase
@@ -29,7 +28,7 @@ val userModule = module {
         UserRemoteImpl(get())
     }
 
-    single<UserPreferences> {
+    factory {
         UserPreferencesManager(androidContext())
     }
 

@@ -1,6 +1,7 @@
 package com.zaragoza.contest.ui.fragment.menu.game
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -25,6 +26,7 @@ class QuestionDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args: QuestionDetailFragmentArgs by navArgs()
+    private val question = args.question
 
     private val handler = Handler(Looper.getMainLooper())
     private var startTime: Long = 0L
@@ -47,7 +49,6 @@ class QuestionDetailFragment : Fragment() {
     }
 
     private fun initUI() {
-        val question = args.question
         binding.apply {
             tvStatementQuestionInfoFragment.text = question.statement
             tvQuestionNrOneInfoFragment.text = question.firstAnswer
@@ -97,15 +98,25 @@ class QuestionDetailFragment : Fragment() {
 
         val isCorrect = selectedAnswer == correctAnswerText
         val timeTaken = responseTime ?: TOTAL_TIME
-        val playerScore = if (isCorrect) calculateScore(timeTaken) else 0
+        val currentQuestionScore = if (isCorrect) calculateScore(timeTaken) else 0
+
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+        val currentTotalScore = sharedPreferences.getInt("playerScore", 0)
+        val newTotalScore = currentTotalScore + currentQuestionScore
+
+        val editor = sharedPreferences.edit()
+        editor.putInt("playerScore", newTotalScore)
+        editor.putBoolean("isCorrect_${args.question.id}", isCorrect)
+        editor.apply()
 
         alertDialog.setTitle(if (isCorrect) "Respuesta correcta" else "Respuesta incorrecta")
 
         val timeTakenMessage = "Tiempo en responder: ${timeTaken / 1000} segundos"
         if (selectedAnswer != null) {
-            alertDialog.setMessage("Respuesta seleccionada: $selectedAnswer\n$timeTakenMessage\nPuntuación: $playerScore")
+            alertDialog.setMessage("Respuesta seleccionada: $selectedAnswer\n$timeTakenMessage\nPuntuación: $currentQuestionScore")
         } else {
-            alertDialog.setMessage("Tiempo agotado, $timeTakenMessage\nPuntuación: $playerScore")
+            alertDialog.setMessage("Tiempo agotado, $timeTakenMessage\nPuntuación: $currentQuestionScore")
         }
 
         alertDialog.setPositiveButton("OK") { _, _ ->
