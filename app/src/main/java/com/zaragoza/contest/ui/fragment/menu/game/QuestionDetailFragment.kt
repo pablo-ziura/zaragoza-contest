@@ -1,18 +1,21 @@
 package com.zaragoza.contest.ui.fragment.menu.game
 
-import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.zaragoza.contest.databinding.FragmentQuestionDetailBinding
+import com.zaragoza.contest.model.Question
+import com.zaragoza.contest.ui.common.ResourceState
+import com.zaragoza.contest.ui.viewmodel.GetQuestionListState
+import com.zaragoza.contest.ui.viewmodel.QuestionViewModel
+import com.zaragoza.contest.ui.viewmodel.ScoreViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class QuestionDetailFragment : Fragment() {
 
@@ -25,10 +28,11 @@ class QuestionDetailFragment : Fragment() {
     private var _binding: FragmentQuestionDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val args: QuestionDetailFragmentArgs by navArgs()
-    private val question = args.question
+    private val questionViewModel: QuestionViewModel by activityViewModel()
+    private val scoreViewModel: ScoreViewModel by activityViewModel()
 
-    private val handler = Handler(Looper.getMainLooper())
+    private var currentQuestion: Question? = null
+
     private var startTime: Long = 0L
     private var selectedAnswer: String? = null
     private var responseTime: Long? = null
@@ -43,12 +47,55 @@ class QuestionDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUI()
-        setupTimer()
-        setupClickListeners()
+
+        initViewModel()
     }
 
-    private fun initUI() {
+    private fun initViewModel() {
+        questionViewModel.getQuestionListLiveData.observe(viewLifecycleOwner) { state ->
+            handleGetQuestionListState(state)
+        }
+        questionViewModel.getQuestionList()
+    }
+
+    private fun handleGetQuestionListState(state: GetQuestionListState) {
+        val currentQuestionIndex = questionViewModel.getCurrentQuestionIndex()
+        when (state) {
+            is ResourceState.Loading -> {
+                Log.i("RESPONSE", "CARGANDO")
+            }
+
+            is ResourceState.Success -> {
+                if (currentQuestionIndex < state.result.size) {
+                    val question = state.result[currentQuestionIndex]
+                    currentQuestion = question
+                    initUI(question)
+                } else {
+                    showFinalScoreDialog()
+                }
+            }
+
+            is ResourceState.Error -> {
+                Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
+            }
+
+            is ResourceState.None -> {
+                //
+            }
+        }
+    }
+
+    private fun initUI(question: Question) {
+
+        startTime = System.currentTimeMillis()
+
+        bindNewQuestion(question)
+        setupTimer()
+        setupClickListeners()
+
+    }
+
+    private fun bindNewQuestion(question: Question) {
         binding.apply {
             tvStatementQuestionInfoFragment.text = question.statement
             tvQuestionNrOneInfoFragment.text = question.firstAnswer
@@ -56,25 +103,15 @@ class QuestionDetailFragment : Fragment() {
             tvQuestionNrThreeInfoFragment.text = question.thirdAnswer
             tvQuestionNrFourInfoFragment.text = question.fourthAnswer
         }
-        startTime = System.currentTimeMillis()
     }
 
     private fun setupTimer() {
-        handler.post(object : Runnable {
-            override fun run() {
-                val elapsedMillis = System.currentTimeMillis() - startTime
-                if (elapsedMillis < TOTAL_TIME) {
-                    val remainingMillis = TOTAL_TIME - elapsedMillis
-                    val progress = ((remainingMillis / TOTAL_TIME.toFloat()) * 100).toInt()
-                    binding.pbTimeQuestionInfoFragment.progress = 100 - progress
-
-                    handler.postDelayed(this, 1000)
-                } else {
-                    handler.removeCallbacksAndMessages(null)
-                    showDialog()
-                }
-            }
-        })
+        val elapsedMillis = System.currentTimeMillis() - startTime
+        if (elapsedMillis < TOTAL_TIME) {
+            val remainingMillis = TOTAL_TIME - elapsedMillis
+            val progress = ((remainingMillis / TOTAL_TIME.toFloat()) * 100).toInt()
+            binding.pbTimeQuestionInfoFragment.progress = 100 - progress
+        }
     }
 
     private fun setupClickListeners() {
@@ -82,8 +119,16 @@ class QuestionDetailFragment : Fragment() {
             selectedAnswer = (view as TextView).text.toString()
             responseTime = System.currentTimeMillis() - startTime
 
-            handler.removeCallbacksAndMessages(null)
-            showDialog()
+            val isCorrect = isAnswerCorrect(selectedAnswer, currentQuestion)
+
+            val score = if (isCorrect) {
+                responseTime?.let { timeElapsed -> calculateScore(timeElapsed) } ?: 0
+            } else {
+                0
+            }
+
+            showAnswerDialog(isCorrect, score)
+
         }
 
         binding.tvQuestionNrOneInfoFragment.setOnClickListener(clickListener)
@@ -92,48 +137,50 @@ class QuestionDetailFragment : Fragment() {
         binding.tvQuestionNrFourInfoFragment.setOnClickListener(clickListener)
     }
 
-    private fun showDialog() {
-        val alertDialog = AlertDialog.Builder(requireContext())
-        val correctAnswerText = getCorrectAnswerText()
-
-        val isCorrect = selectedAnswer == correctAnswerText
-        val timeTaken = responseTime ?: TOTAL_TIME
-        val currentQuestionScore = if (isCorrect) calculateScore(timeTaken) else 0
-
-        val sharedPreferences =
-            requireActivity().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
-        val currentTotalScore = sharedPreferences.getInt("playerScore", 0)
-        val newTotalScore = currentTotalScore + currentQuestionScore
-
-        val editor = sharedPreferences.edit()
-        editor.putInt("playerScore", newTotalScore)
-        editor.putBoolean("isCorrect_${args.question.id}", isCorrect)
-        editor.apply()
-
-        alertDialog.setTitle(if (isCorrect) "Respuesta correcta" else "Respuesta incorrecta")
-
-        val timeTakenMessage = "Tiempo en responder: ${timeTaken / 1000} segundos"
-        if (selectedAnswer != null) {
-            alertDialog.setMessage("Respuesta seleccionada: $selectedAnswer\n$timeTakenMessage\nPuntuación: $currentQuestionScore")
+    private fun showAnswerDialog(isCorrect: Boolean, score: Int) {
+        val message = if (isCorrect) {
+            "¡Respuesta correcta! Tu puntuación es $score."
         } else {
-            alertDialog.setMessage("Tiempo agotado, $timeTakenMessage\nPuntuación: $currentQuestionScore")
+            "Respuesta incorrecta. Tu puntuación es $score."
         }
 
-        alertDialog.setPositiveButton("OK") { _, _ ->
-            findNavController().popBackStack()
-        }
-
-        alertDialog.show()
+        AlertDialog.Builder(requireContext())
+            .setTitle("Resultado")
+            .setMessage(message)
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                scoreViewModel.updateCurrentUserScore(score)
+                questionViewModel.getNextQuestion()
+            }
+            .create()
+            .show()
     }
 
-    private fun getCorrectAnswerText(): String {
-        return when (args.question.rightAnswer) {
-            1 -> args.question.firstAnswer
-            2 -> args.question.secondAnswer
-            3 -> args.question.thirdAnswer
-            4 -> args.question.fourthAnswer
-            else -> throw IllegalArgumentException("Respuesta correcta no válida")
+    private fun showFinalScoreDialog() {
+
+        val score = scoreViewModel.fetchCurrentScore()
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Resultado")
+            .setMessage("Puntuación final: $score")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                parentFragmentManager.popBackStack()
+            }
+            .create()
+            .show()
+    }
+
+    private fun isAnswerCorrect(selected: String?, question: Question?): Boolean {
+        val correctIndex = question?.rightAnswer ?: return false
+        val correctAnswer = when (correctIndex) {
+            1 -> question.firstAnswer
+            2 -> question.secondAnswer
+            3 -> question.thirdAnswer
+            4 -> question.fourthAnswer
+            else -> return false
         }
+        return selected == correctAnswer
     }
 
     private fun calculateScore(timeElapsed: Long): Int {
@@ -142,7 +189,6 @@ class QuestionDetailFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        handler.removeCallbacksAndMessages(null)
         _binding = null
     }
 }

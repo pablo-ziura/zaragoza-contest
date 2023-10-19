@@ -20,8 +20,6 @@ class ProfileFragment : Fragment() {
 
     private val userViewModel: UserViewModel by activityViewModel()
 
-    private val CAMERA_PERMISSION_REQUEST_CODE = 100
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -70,8 +68,6 @@ class ProfileFragment : Fragment() {
         _binding?.tvNicknameProfileFragment?.text = user.nickname
         _binding?.tvEmailProfileFragment?.text = user.email
         _binding?.tvScoreProfileFragment?.text = user.score.toString()
-
-
     }
 
     override fun onDestroyView() {

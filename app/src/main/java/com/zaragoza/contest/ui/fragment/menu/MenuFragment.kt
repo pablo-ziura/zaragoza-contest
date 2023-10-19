@@ -29,7 +29,7 @@ class MenuFragment : Fragment() {
         }
 
         binding.btnStartContestMenu.setOnClickListener {
-            findNavController().navigate(R.id.action_menuFragment_to_questionListFragment)
+            findNavController().navigate(R.id.action_menuFragment_to_questionDetailFragment)
         }
 
     }

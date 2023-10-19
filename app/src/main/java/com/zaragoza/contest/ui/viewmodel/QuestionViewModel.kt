@@ -20,6 +20,8 @@ class QuestionViewModel(
     private val _getQuestionListLiveData = MutableLiveData<GetQuestionListState>()
     val getQuestionListLiveData: LiveData<GetQuestionListState> get() = _getQuestionListLiveData
 
+    private var currentQuestionIndex = 0
+
     fun getQuestionList() {
         _getQuestionListLiveData.value = ResourceState.Loading()
 
@@ -37,6 +39,15 @@ class QuestionViewModel(
             }
         }
 
+    }
+
+    fun getCurrentQuestionIndex(): Int {
+        return currentQuestionIndex
+    }
+
+    fun getNextQuestion() {
+        currentQuestionIndex++
+        getQuestionList()
     }
 
 }
