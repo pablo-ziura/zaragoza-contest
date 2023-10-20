@@ -32,13 +32,13 @@ class UserRemoteImpl(private val firebaseAuth: FirebaseAuth) {
     }
 
     suspend fun checkUser(userEmail: String, userPassword: String): String? {
-        try {
+        return try {
             val result = firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword).await()
             val user = result.user
-            return user?.uid
+            user?.uid
         } catch (e: Exception) {
             Log.i("USER SIGN IN", "ERROR: ${e.message}")
-            return null
+            null
         }
     }
 
@@ -56,5 +56,17 @@ class UserRemoteImpl(private val firebaseAuth: FirebaseAuth) {
             }
         })
     }
+
+    suspend fun editUser(user: User) {
+        try {
+            val uid = user.id
+            val userRef = database.getReference("Users").child(uid)
+            userRef.setValue(user).await()
+        } catch (e: Exception) {
+            Log.i("USER EDIT", "ERROR: ${e.message}")
+        }
+    }
+
+
 }
 

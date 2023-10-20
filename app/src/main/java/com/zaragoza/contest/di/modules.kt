@@ -16,6 +16,7 @@ import com.zaragoza.contest.domain.usecase.score.FetchCurrentScoreUseCase
 import com.zaragoza.contest.domain.usecase.score.UpdateCurrentUserScoreUseCase
 import com.zaragoza.contest.domain.usecase.user.CheckUserUseCase
 import com.zaragoza.contest.domain.usecase.user.CreateUserUseCase
+import com.zaragoza.contest.domain.usecase.user.EditUserUseCase
 import com.zaragoza.contest.domain.usecase.user.FetchUserIdUseCase
 import com.zaragoza.contest.domain.usecase.user.GetUserInfoUseCase
 import com.zaragoza.contest.domain.usecase.user.SaveUserIdUseCase
@@ -45,11 +46,12 @@ val userModule = module {
     factory { CreateUserUseCase(get()) }
     factory { CheckUserUseCase(get()) }
     factory { GetUserInfoUseCase(get()) }
+    factory { EditUserUseCase(get()) }
     factory { SaveUserIdUseCase(get()) }
     factory { FetchUserIdUseCase(get()) }
 
     viewModel {
-        UserViewModel(get(), get(), get(), get(), get())
+        UserViewModel(get(), get(), get(), get(), get(), get())
     }
 }
 

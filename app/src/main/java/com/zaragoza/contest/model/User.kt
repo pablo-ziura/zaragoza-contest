@@ -6,5 +6,5 @@ data class User(
     var password: String = "",
     val nickname: String = "",
     val urlImage: String? = null,
-    val score: Int? = 0
+    var score: Int? = 0
 )

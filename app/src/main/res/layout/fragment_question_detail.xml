@@ -89,15 +89,49 @@
         app:layout_constraintTop_toBottomOf="@id/tv_question_nr_four_info_fragment"
         tools:text="Respuesta Correcta/Incorrecta" />
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/pb_time_question_info_fragment"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_current_score_info_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="32dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_result_info_fragment"
-        tools:progress="40" />
+        tools:text="Puntuación Actual: 3000 puntos" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_seconds_question_info_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_current_score_info_fragment"
+        tools:text="30" />
+
+    <!--    <com.google.android.material.progressindicator.LinearProgressIndicator-->
+    <!--        android:id="@+id/pb_time_question_info_fragment"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginHorizontal="32dp"-->
+    <!--        android:layout_marginTop="64dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/tv_result_info_fragment"-->
+    <!--        tools:progress="40" />-->
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_next_question_info_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SIGUIENTE PREGUNTA"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

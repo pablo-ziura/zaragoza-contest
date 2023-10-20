@@ -41,6 +41,10 @@ class QuestionViewModel(
 
     }
 
+    fun resetGame() {
+        currentQuestionIndex = 0
+    }
+
     fun getCurrentQuestionIndex(): Int {
         return currentQuestionIndex
     }

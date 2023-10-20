@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zaragoza.contest.domain.usecase.user.CheckUserUseCase
 import com.zaragoza.contest.domain.usecase.user.CreateUserUseCase
+import com.zaragoza.contest.domain.usecase.user.EditUserUseCase
 import com.zaragoza.contest.domain.usecase.user.FetchUserIdUseCase
 import com.zaragoza.contest.domain.usecase.user.GetUserInfoUseCase
 import com.zaragoza.contest.domain.usecase.user.SaveUserIdUseCase
@@ -18,11 +19,14 @@ import kotlinx.coroutines.withContext
 typealias CreateUserState = ResourceState<Void?>
 typealias CheckUserState = ResourceState<String?>
 typealias GetUserInfoState = ResourceState<User>
+typealias EditUserState = ResourceState<Void?>
+
 
 class UserViewModel(
     private val createUserUseCase: CreateUserUseCase,
     private val checkUserUseCase: CheckUserUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val editUserUseCase: EditUserUseCase,
     private val saveUserIdUseCase: SaveUserIdUseCase,
     private val fetchUserIdUseCase: FetchUserIdUseCase
 ) : ViewModel() {
@@ -35,6 +39,9 @@ class UserViewModel(
 
     private val _getUserInfoLiveData = MutableLiveData<GetUserInfoState>()
     val getUserInfoLiveData: LiveData<GetUserInfoState> get() = _getUserInfoLiveData
+
+    private val _editUserLiveData = MutableLiveData<EditUserState>()
+    val editUserLiveData: LiveData<EditUserState> get() = _editUserLiveData
 
     fun createUser(user: User) {
 
@@ -93,6 +100,24 @@ class UserViewModel(
             } catch (e: Exception) {
                 _getUserInfoLiveData.value = ResourceState.Error(e.localizedMessage.orEmpty())
                 _getUserInfoLiveData.value = ResourceState.None()
+            }
+        }
+    }
+
+    fun editUser(user: User) {
+
+        _editUserLiveData.value = ResourceState.Loading()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                editUserUseCase.execute(user)
+                withContext(Dispatchers.Main) {
+                    _editUserLiveData.value = ResourceState.Success(null)
+                    _editUserLiveData.value = ResourceState.None()
+                }
+            } catch (e: Exception) {
+                _editUserLiveData.value = ResourceState.Error(e.localizedMessage.orEmpty())
+                _editUserLiveData.value = ResourceState.None()
             }
         }
     }

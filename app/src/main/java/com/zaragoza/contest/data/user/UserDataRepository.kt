@@ -22,6 +22,10 @@ class UserDataRepository(
         return userRemote.getUserInfo(userId)
     }
 
+    override suspend fun editUser(user: User) {
+        userRemote.editUser(user)
+    }
+
     override fun saveUserId(userId: String) {
         userPreferences.saveUserId(userId)
     }

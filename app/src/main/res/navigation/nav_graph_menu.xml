@@ -29,7 +29,21 @@
         android:name="com.zaragoza.contest.ui.fragment.menu.game.QuestionDetailFragment"
         android:label="fragment_question_detail"
         tools:layout="@layout/fragment_question_detail">
+        <action
+            android:id="@+id/action_questionDetailFragment_to_finalScoreFragment"
+            app:destination="@id/finalScoreFragment" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/finalScoreFragment"
+        android:name="com.zaragoza.contest.ui.fragment.menu.game.FinalScoreFragment"
+        android:label="fragment_final_score"
+        tools:layout="@layout/fragment_final_score">
+        <action
+            android:id="@+id/action_finalScoreFragment_to_menuFragment"
+            app:destination="@id/menuFragment"
+            app:popUpTo="@id/menuFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
 

@@ -1,14 +1,16 @@
 package com.zaragoza.contest.ui.fragment.menu.game
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.zaragoza.contest.R
 import com.zaragoza.contest.databinding.FragmentQuestionDetailBinding
 import com.zaragoza.contest.model.Question
 import com.zaragoza.contest.ui.common.ResourceState
@@ -20,9 +22,9 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 class QuestionDetailFragment : Fragment() {
 
     companion object {
-        const val TOTAL_TIME = 30000L
-        const val MIN_SCORE = 500
-        const val MAX_SCORE = 1000
+        const val TOTAL_TIME = 10500L
+        const val MIN_SCORE = 1000
+        const val MAX_SCORE = 5000
     }
 
     private var _binding: FragmentQuestionDetailBinding? = null
@@ -33,9 +35,11 @@ class QuestionDetailFragment : Fragment() {
 
     private var currentQuestion: Question? = null
 
-    private var startTime: Long = 0L
+    private var lastScore: Int = 0
+
+    private var timer: CountDownTimer? = null
+
     private var selectedAnswer: String? = null
-    private var responseTime: Long? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +53,8 @@ class QuestionDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViewModel()
+        setupNextQuestionButton()
+
     }
 
     private fun initViewModel() {
@@ -71,7 +77,7 @@ class QuestionDetailFragment : Fragment() {
                     currentQuestion = question
                     initUI(question)
                 } else {
-                    showFinalScoreDialog()
+                    navigateToFinalScoreFragment()
                 }
             }
 
@@ -87,11 +93,9 @@ class QuestionDetailFragment : Fragment() {
 
     private fun initUI(question: Question) {
 
-        startTime = System.currentTimeMillis()
-
         bindNewQuestion(question)
-        setupTimer()
         setupClickListeners()
+        setupTimer()
 
     }
 
@@ -105,30 +109,25 @@ class QuestionDetailFragment : Fragment() {
         }
     }
 
-    private fun setupTimer() {
-        val elapsedMillis = System.currentTimeMillis() - startTime
-        if (elapsedMillis < TOTAL_TIME) {
-            val remainingMillis = TOTAL_TIME - elapsedMillis
-            val progress = ((remainingMillis / TOTAL_TIME.toFloat()) * 100).toInt()
-            binding.pbTimeQuestionInfoFragment.progress = 100 - progress
-        }
-    }
-
     private fun setupClickListeners() {
         val clickListener = View.OnClickListener { view ->
+            timer?.cancel()
+
             selectedAnswer = (view as TextView).text.toString()
-            responseTime = System.currentTimeMillis() - startTime
+
+            val timeDisplayed = binding.tvSecondsQuestionInfoFragment.text.toString().toLong()
+            val timeElapsed =
+                TOTAL_TIME - timeDisplayed * 1000
 
             val isCorrect = isAnswerCorrect(selectedAnswer, currentQuestion)
 
             val score = if (isCorrect) {
-                responseTime?.let { timeElapsed -> calculateScore(timeElapsed) } ?: 0
+                calculateScore(timeElapsed)
             } else {
                 0
             }
 
-            showAnswerDialog(isCorrect, score)
-
+            updateUIWithResult(isCorrect, score)
         }
 
         binding.tvQuestionNrOneInfoFragment.setOnClickListener(clickListener)
@@ -137,38 +136,60 @@ class QuestionDetailFragment : Fragment() {
         binding.tvQuestionNrFourInfoFragment.setOnClickListener(clickListener)
     }
 
-    private fun showAnswerDialog(isCorrect: Boolean, score: Int) {
-        val message = if (isCorrect) {
-            "¡Respuesta correcta! Tu puntuación es $score."
-        } else {
-            "Respuesta incorrecta. Tu puntuación es $score."
-        }
+    private fun setupTimer() {
+        timer?.cancel()
 
-        AlertDialog.Builder(requireContext())
-            .setTitle("Resultado")
-            .setMessage(message)
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-                scoreViewModel.updateCurrentUserScore(score)
-                questionViewModel.getNextQuestion()
+        timer = object : CountDownTimer(TOTAL_TIME, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val remainingSeconds = millisUntilFinished / 1000
+                binding.tvSecondsQuestionInfoFragment.text = remainingSeconds.toString()
             }
-            .create()
-            .show()
+
+            override fun onFinish() {
+                updateUIWithResult(false, 0)
+            }
+        }.start()
     }
 
-    private fun showFinalScoreDialog() {
+    private fun updateUIWithResult(isCorrect: Boolean, score: Int) {
 
+        lastScore = score
+
+        val resultMessage = if (isCorrect) {
+            "¡Respuesta correcta!"
+        } else {
+            "Respuesta incorrecta."
+        }
+
+        val scoreMessage = "Tu puntuación es $score."
+
+        binding.tvResultInfoFragment.text = resultMessage
+        binding.tvCurrentScoreInfoFragment.text = scoreMessage
+
+        binding.tvResultInfoFragment.visibility = View.VISIBLE
+        binding.tvCurrentScoreInfoFragment.visibility = View.VISIBLE
+        binding.btnNextQuestionInfoFragment.visibility = View.VISIBLE
+    }
+
+    private fun setupNextQuestionButton() {
+        binding.btnNextQuestionInfoFragment.setOnClickListener {
+            scoreViewModel.updateCurrentUserScore(lastScore)
+            questionViewModel.getNextQuestion()
+            setupTimer()
+            binding.tvResultInfoFragment.visibility = View.GONE
+            binding.tvCurrentScoreInfoFragment.visibility = View.GONE
+            binding.btnNextQuestionInfoFragment.visibility = View.GONE
+        }
+    }
+
+    private fun navigateToFinalScoreFragment() {
         val score = scoreViewModel.fetchCurrentScore()
-
-        AlertDialog.Builder(requireContext())
-            .setTitle("Resultado")
-            .setMessage("Puntuación final: $score")
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-                parentFragmentManager.popBackStack()
-            }
-            .create()
-            .show()
+        val bundle = Bundle()
+        bundle.putInt("finalScore", score)
+        findNavController().navigate(
+            R.id.action_questionDetailFragment_to_finalScoreFragment,
+            bundle
+        )
     }
 
     private fun isAnswerCorrect(selected: String?, question: Question?): Boolean {
@@ -184,11 +205,16 @@ class QuestionDetailFragment : Fragment() {
     }
 
     private fun calculateScore(timeElapsed: Long): Int {
-        return MIN_SCORE + ((TOTAL_TIME - timeElapsed).toFloat() / (TOTAL_TIME - 1000) * (MAX_SCORE - MIN_SCORE)).toInt()
+        val timeRange = TOTAL_TIME
+        val scoreRange = MAX_SCORE - MIN_SCORE
+
+        val timeLeft = TOTAL_TIME - timeElapsed
+        return MIN_SCORE + ((timeLeft.toFloat() / timeRange) * scoreRange).toInt()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        timer?.cancel()
         _binding = null
     }
 }
