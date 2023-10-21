@@ -6,5 +6,4 @@ interface QuestionRepository {
 
     suspend fun getQuestionList(): List<Question>
 
-
 }

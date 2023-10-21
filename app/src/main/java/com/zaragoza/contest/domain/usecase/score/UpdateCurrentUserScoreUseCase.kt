@@ -1,11 +1,11 @@
 package com.zaragoza.contest.domain.usecase.score
 
-import com.zaragoza.contest.domain.ScorePreferences
+import com.zaragoza.contest.domain.ScoreRepository
 
-class UpdateCurrentUserScoreUseCase(private val scorePreferences: ScorePreferences) {
+class UpdateCurrentUserScoreUseCase(private val scoreRepository: ScoreRepository) {
     fun execute(newScore: Int) {
-        val currentScore = scorePreferences.fetchCurrentScore()
+        val currentScore = scoreRepository.fetchCurrentScore()
         val updatedScore = currentScore + newScore
-        scorePreferences.updateCurrentUserScore(updatedScore)
+        scoreRepository.updateCurrentUserScore(updatedScore)
     }
 }

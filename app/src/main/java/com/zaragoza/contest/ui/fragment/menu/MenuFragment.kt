@@ -1,6 +1,7 @@
 package com.zaragoza.contest.ui.fragment.menu
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.zaragoza.contest.R
 import com.zaragoza.contest.databinding.FragmentMenuBinding
+import com.zaragoza.contest.ui.fragment.menu.scores.ScoresRanking
 import com.zaragoza.contest.ui.viewmodel.QuestionViewModel
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
@@ -43,10 +45,21 @@ class MenuFragment : Fragment() {
             findNavController().navigate(R.id.action_menuFragment_to_profileFragment)
         }
 
+        binding.btnBestScoresMenu.setOnClickListener {
+            val intent = Intent(requireContext(), ScoresRanking::class.java)
+            startActivity(intent)
+        }
+
         binding.btnStartContestMenu.setOnClickListener {
             questionViewModel.resetGame()
             sharedPreferences.edit().putInt("currentUserScore", 0).apply()
             findNavController().navigate(R.id.action_menuFragment_to_questionDetailFragment)
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

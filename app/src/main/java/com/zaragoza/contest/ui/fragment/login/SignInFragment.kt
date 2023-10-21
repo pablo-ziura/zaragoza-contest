@@ -64,7 +64,7 @@ class SignInFragment : Fragment() {
             if (userId != null) {
                 when (userViewModel.saveUserId(userId)) {
                     is ResourceState.Success -> {
-                        Log.e("SignInFragment", userId)
+                        Log.i("SignInFragment", userId)
                         val intent = Intent(requireContext(), MenuActivity::class.java)
                         startActivity(intent)
                     }

@@ -4,15 +4,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.zaragoza.contest.data.question.QuestionDataRepository
 import com.zaragoza.contest.data.question.remote.QuestionRemoteImpl
 import com.zaragoza.contest.data.score.ScoreDataRepository
+import com.zaragoza.contest.data.score.remote.ScoreRemoteImpl
 import com.zaragoza.contest.data.score.storage.ScorePreferencesManager
 import com.zaragoza.contest.data.user.UserDataRepository
 import com.zaragoza.contest.data.user.remote.UserRemoteImpl
 import com.zaragoza.contest.data.user.storage.UserPreferencesManager
 import com.zaragoza.contest.domain.QuestionRepository
-import com.zaragoza.contest.domain.ScorePreferences
+import com.zaragoza.contest.domain.ScoreRepository
 import com.zaragoza.contest.domain.UserRepository
 import com.zaragoza.contest.domain.usecase.question.GetQuestionListUseCase
 import com.zaragoza.contest.domain.usecase.score.FetchCurrentScoreUseCase
+import com.zaragoza.contest.domain.usecase.score.GetBestScoresUseCase
 import com.zaragoza.contest.domain.usecase.score.UpdateCurrentUserScoreUseCase
 import com.zaragoza.contest.domain.usecase.user.CheckUserUseCase
 import com.zaragoza.contest.domain.usecase.user.CreateUserUseCase
@@ -55,6 +57,29 @@ val userModule = module {
     }
 }
 
+val scoreModule = module {
+
+    factory {
+        ScoreRemoteImpl()
+    }
+
+    factory {
+        ScorePreferencesManager(androidContext())
+    }
+
+    factory<ScoreRepository> {
+        ScoreDataRepository(get(), get())
+    }
+
+    factory { UpdateCurrentUserScoreUseCase(get()) }
+    factory { FetchCurrentScoreUseCase(get()) }
+    factory { GetBestScoresUseCase(get()) }
+
+    viewModel {
+        ScoreViewModel(get(), get(), get())
+    }
+
+}
 
 val questionModule = module {
 
@@ -71,23 +96,4 @@ val questionModule = module {
     viewModel {
         QuestionViewModel(get())
     }
-}
-
-val scoreModule = module {
-
-    single<ScorePreferences> {
-        ScorePreferencesManager(androidContext())
-    }
-
-    factory {
-        ScoreDataRepository(get())
-    }
-
-    factory { UpdateCurrentUserScoreUseCase(get()) }
-    factory { FetchCurrentScoreUseCase(get()) }
-
-    viewModel {
-        ScoreViewModel(get(), get())
-    }
-
 }

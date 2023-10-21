@@ -2,14 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature android:name="android.hardware.camera.any" />
-
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
-
     <application
         android:name=".ContestApplication"
         android:allowBackup="true"
@@ -22,8 +14,8 @@
         android:theme="@style/Theme.ZaragozaContest"
         tools:targetApi="31">
         <activity
-            android:name=".ui.ScoresActivity"
-            android:exported="false"
+            android:name=".ui.fragment.menu.scores.ScoresRanking"
+            android:exported="true"
             android:label="@string/title_activity_scores"
             android:theme="@style/Theme.ZaragozaContest" />
         <activity
@@ -37,13 +29,7 @@
         </activity>
         <activity
             android:name=".ui.MenuActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>

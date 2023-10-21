@@ -1,4 +1,4 @@
-package com.zaragoza.contest.ui.fragment.menu.scores.compose.theme
+package com.zaragoza.contest.ui.fragment.menu.scores.ui.theme
 
 import android.app.Activity
 import android.os.Build

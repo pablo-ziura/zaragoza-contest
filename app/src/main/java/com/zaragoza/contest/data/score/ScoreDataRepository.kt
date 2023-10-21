@@ -1,15 +1,25 @@
 package com.zaragoza.contest.data.score
 
-import com.zaragoza.contest.domain.ScorePreferences
+import com.zaragoza.contest.data.score.remote.ScoreRemoteImpl
+import com.zaragoza.contest.data.score.storage.ScorePreferencesManager
+import com.zaragoza.contest.domain.ScoreRepository
+import com.zaragoza.contest.model.Score
 
-class ScoreDataRepository(private val scorePreferences: ScorePreferences) {
+class ScoreDataRepository(
+    private val scorePreferences: ScorePreferencesManager,
+    private val scoreRemote: ScoreRemoteImpl
+) : ScoreRepository {
 
-    fun fetchCurrentScore(): Int {
+    override fun fetchCurrentScore(): Int {
         return scorePreferences.fetchCurrentScore()
     }
 
-    fun updateCurrentUserScore(score: Int) {
+    override fun updateCurrentUserScore(score: Int) {
         return scorePreferences.updateCurrentUserScore(score)
+    }
+
+    override suspend fun getBestScoresList(): List<Score> {
+        return scoreRemote.getBestScoresList()
     }
 
 }
