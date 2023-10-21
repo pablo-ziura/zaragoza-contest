@@ -14,18 +14,13 @@ import com.zaragoza.contest.R
 import com.zaragoza.contest.databinding.FragmentQuestionDetailBinding
 import com.zaragoza.contest.model.Question
 import com.zaragoza.contest.ui.common.ResourceState
+import com.zaragoza.contest.ui.viewmodel.GetBestScoresListState
 import com.zaragoza.contest.ui.viewmodel.GetQuestionListState
 import com.zaragoza.contest.ui.viewmodel.QuestionViewModel
 import com.zaragoza.contest.ui.viewmodel.ScoreViewModel
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class QuestionDetailFragment : Fragment() {
-
-    companion object {
-        const val TOTAL_TIME = 10500L
-        const val MIN_SCORE = 1000
-        const val MAX_SCORE = 5000
-    }
 
     private var _binding: FragmentQuestionDetailBinding? = null
     private val binding get() = _binding!!
@@ -36,6 +31,12 @@ class QuestionDetailFragment : Fragment() {
     private var currentQuestion: Question? = null
 
     private var lastScore: Int = 0
+
+    companion object {
+        const val TOTAL_TIME = 10500L
+        const val MIN_SCORE = 1000
+        const val MAX_SCORE = 5000
+    }
 
     private var timer: CountDownTimer? = null
 
@@ -62,6 +63,12 @@ class QuestionDetailFragment : Fragment() {
             handleGetQuestionListState(state)
         }
         questionViewModel.getQuestionList()
+
+        scoreViewModel.getBestScoresListLiveData.observe(viewLifecycleOwner) { state ->
+            handleGetBestScoresListState(state)
+        }
+        scoreViewModel.getBestScores()
+
     }
 
     private fun handleGetQuestionListState(state: GetQuestionListState) {
@@ -79,6 +86,26 @@ class QuestionDetailFragment : Fragment() {
                 } else {
                     navigateToFinalScoreFragment()
                 }
+            }
+
+            is ResourceState.Error -> {
+                Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
+            }
+
+            is ResourceState.None -> {
+                //
+            }
+        }
+    }
+
+    private fun handleGetBestScoresListState(state: GetBestScoresListState) {
+        when (state) {
+            is ResourceState.Loading -> {
+                Log.i("RESPONSE", "CARGANDO")
+            }
+
+            is ResourceState.Success -> {
+                Log.i("SCORES", state.result.toString())
             }
 
             is ResourceState.Error -> {

@@ -6,14 +6,15 @@ import com.zaragoza.contest.di.scoreModule
 import com.zaragoza.contest.di.userModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 class ContestApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
-            printLogger()
+            printLogger(Level.DEBUG)
             androidContext(this@ContestApplication)
-            modules(userModule, questionModule, scoreModule).allowOverride(true)
+            modules(userModule, scoreModule, questionModule).allowOverride(true)
         }
     }
 }

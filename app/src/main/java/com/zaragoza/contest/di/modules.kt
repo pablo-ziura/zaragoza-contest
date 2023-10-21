@@ -78,7 +78,6 @@ val scoreModule = module {
     viewModel {
         ScoreViewModel(get(), get(), get())
     }
-
 }
 
 val questionModule = module {

@@ -67,6 +67,5 @@ class UserRemoteImpl(private val firebaseAuth: FirebaseAuth) {
         }
     }
 
-
 }
 

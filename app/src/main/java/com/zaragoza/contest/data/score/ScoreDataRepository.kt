@@ -21,5 +21,4 @@ class ScoreDataRepository(
     override suspend fun getBestScoresList(): List<Score> {
         return scoreRemote.getBestScoresList()
     }
-
 }

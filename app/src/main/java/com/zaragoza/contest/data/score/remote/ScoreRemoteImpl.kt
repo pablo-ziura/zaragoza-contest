@@ -22,10 +22,10 @@ class ScoreRemoteImpl {
         usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (userSnapshot in dataSnapshot.children) {
-                    val score = userSnapshot.getValue(Score::class.java)
-                    if (score != null) {
-                        scoresList.add(score)
-                    }
+                    val nickname = userSnapshot.child("nickname").getValue(String::class.java) ?: ""
+                    val scorePoints = userSnapshot.child("score").getValue(Int::class.java) ?: 0
+                    val score = Score(nickname, scorePoints)
+                    scoresList.add(score)
                 }
 
                 scoresList.sortByDescending { it.scorePoints }
