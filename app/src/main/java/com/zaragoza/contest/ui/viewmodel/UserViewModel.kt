@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.zaragoza.contest.domain.usecase.user.CheckUserUseCase
 import com.zaragoza.contest.domain.usecase.user.CreateUserUseCase
 import com.zaragoza.contest.domain.usecase.user.EditUserUseCase
@@ -20,8 +21,6 @@ import kotlinx.coroutines.withContext
 typealias CreateUserState = ResourceState<Void?>
 typealias CheckUserState = ResourceState<String?>
 typealias GetUserInfoState = ResourceState<User>
-typealias EditUserState = ResourceState<Void?>
-typealias UploadProfileImageState = ResourceState<Void?>
 
 class UserViewModel(
     private val createUserUseCase: CreateUserUseCase,
@@ -42,14 +41,7 @@ class UserViewModel(
     private val _getUserInfoLiveData = MutableLiveData<GetUserInfoState>()
     val getUserInfoLiveData: LiveData<GetUserInfoState> get() = _getUserInfoLiveData
 
-    private val _editUserLiveData = MutableLiveData<EditUserState>()
-    val editUserLiveData: LiveData<EditUserState> get() = _editUserLiveData
-
-    private val _uploadProfileImage = MutableLiveData<UploadProfileImageState>()
-    val uploadProfileImage: LiveData<UploadProfileImageState> get() = _uploadProfileImage
-
     fun createUser(user: User) {
-
         _createUserLiveData.value = ResourceState.Loading()
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -59,9 +51,17 @@ class UserViewModel(
                     _createUserLiveData.value = ResourceState.Success(null)
                     _createUserLiveData.value = ResourceState.None()
                 }
+            } catch (e: FirebaseAuthUserCollisionException) {
+                withContext(Dispatchers.Main) {
+                    _createUserLiveData.value =
+                        ResourceState.Error("El correo electrónico ya está en uso")
+                    _createUserLiveData.value = ResourceState.None()
+                }
             } catch (e: Exception) {
-                _createUserLiveData.value = ResourceState.Error(e.localizedMessage.orEmpty())
-                _createUserLiveData.value = ResourceState.None()
+                withContext(Dispatchers.Main) {
+                    _createUserLiveData.value = ResourceState.Error(e.localizedMessage.orEmpty())
+                    _createUserLiveData.value = ResourceState.None()
+                }
             }
         }
     }
@@ -113,31 +113,18 @@ class UserViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 editUserUseCase.execute(user)
-                withContext(Dispatchers.Main) {
-                    _editUserLiveData.value = ResourceState.Success(null)
-                    _editUserLiveData.value = ResourceState.None()
-                }
             } catch (e: Exception) {
-                _editUserLiveData.value = ResourceState.Error(e.localizedMessage.orEmpty())
-                _editUserLiveData.value = ResourceState.None()
+                throw e
             }
         }
     }
 
     fun uploadProfileImage(user: User) {
-
-        _uploadProfileImage.value = ResourceState.Loading()
-
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 uploadProfileImageUseCase.execute(user)
-                withContext(Dispatchers.Main) {
-                    _uploadProfileImage.value = ResourceState.Success(null)
-                    _uploadProfileImage.value = ResourceState.None()
-                }
             } catch (e: Exception) {
-                _uploadProfileImage.value = ResourceState.Error(e.localizedMessage.orEmpty())
-                _uploadProfileImage.value = ResourceState.None()
+                throw e
             }
         }
     }

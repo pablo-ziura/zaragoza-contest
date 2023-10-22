@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -31,8 +32,12 @@ class UserRemoteImpl(private val firebaseAuth: FirebaseAuth) {
             user.password = bcryptHash
             val userRef = database.getReference("Users").child(uid)
             userRef.setValue(user).await()
+        } catch (e: FirebaseAuthUserCollisionException) {
+            Log.i("USER CREATION", "ERROR: El correo electrónico ya está en uso.")
+            throw e
         } catch (e: Exception) {
             Log.i("USER CREATION", "ERROR: ${e.message}")
+            throw e
         }
     }
 
