@@ -7,6 +7,7 @@ interface UserRepository {
     suspend fun checkUser(userEmail: String, userPassword: String): String?
     suspend fun getUserInfo(userId: String): User?
     suspend fun editUser(user: User)
+    suspend fun uploadProfileImageUseCase(user: User)
     fun saveUserId(userId: String)
     fun fetchUserId(): String?
 }

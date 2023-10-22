@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".ContestApplication"
         android:allowBackup="true"
@@ -30,6 +32,10 @@
         <activity
             android:name=".ui.MenuActivity"
             android:exported="true" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAOt2zneWA_xWMrJQSopfHJSPiJmefdTxU" />
     </application>
 
 </manifest>

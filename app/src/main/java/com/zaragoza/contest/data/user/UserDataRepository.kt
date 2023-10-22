@@ -26,6 +26,10 @@ class UserDataRepository(
         userRemote.editUser(user)
     }
 
+    override suspend fun uploadProfileImageUseCase(user: User) {
+        return userRemote.uploadProfileImage(user)
+    }
+
     override fun saveUserId(userId: String) {
         userPreferences.saveUserId(userId)
     }
@@ -33,5 +37,4 @@ class UserDataRepository(
     override fun fetchUserId(): String? {
         return userPreferences.fetchUserId()
     }
-
 }

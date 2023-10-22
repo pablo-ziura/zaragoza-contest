@@ -10,6 +10,7 @@ import com.zaragoza.contest.domain.usecase.user.EditUserUseCase
 import com.zaragoza.contest.domain.usecase.user.FetchUserIdUseCase
 import com.zaragoza.contest.domain.usecase.user.GetUserInfoUseCase
 import com.zaragoza.contest.domain.usecase.user.SaveUserIdUseCase
+import com.zaragoza.contest.domain.usecase.user.UploadProfileImageUseCase
 import com.zaragoza.contest.model.User
 import com.zaragoza.contest.ui.common.ResourceState
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,7 @@ typealias CreateUserState = ResourceState<Void?>
 typealias CheckUserState = ResourceState<String?>
 typealias GetUserInfoState = ResourceState<User>
 typealias EditUserState = ResourceState<Void?>
-
+typealias UploadProfileImageState = ResourceState<Void?>
 
 class UserViewModel(
     private val createUserUseCase: CreateUserUseCase,
@@ -28,7 +29,8 @@ class UserViewModel(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val editUserUseCase: EditUserUseCase,
     private val saveUserIdUseCase: SaveUserIdUseCase,
-    private val fetchUserIdUseCase: FetchUserIdUseCase
+    private val fetchUserIdUseCase: FetchUserIdUseCase,
+    private val uploadProfileImageUseCase: UploadProfileImageUseCase
 ) : ViewModel() {
 
     private val _createUserLiveData = MutableLiveData<CreateUserState>()
@@ -42,6 +44,9 @@ class UserViewModel(
 
     private val _editUserLiveData = MutableLiveData<EditUserState>()
     val editUserLiveData: LiveData<EditUserState> get() = _editUserLiveData
+
+    private val _uploadProfileImage = MutableLiveData<UploadProfileImageState>()
+    val uploadProfileImage: LiveData<UploadProfileImageState> get() = _uploadProfileImage
 
     fun createUser(user: User) {
 
@@ -105,9 +110,6 @@ class UserViewModel(
     }
 
     fun editUser(user: User) {
-
-        _editUserLiveData.value = ResourceState.Loading()
-
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 editUserUseCase.execute(user)
@@ -118,6 +120,24 @@ class UserViewModel(
             } catch (e: Exception) {
                 _editUserLiveData.value = ResourceState.Error(e.localizedMessage.orEmpty())
                 _editUserLiveData.value = ResourceState.None()
+            }
+        }
+    }
+
+    fun uploadProfileImage(user: User) {
+
+        _uploadProfileImage.value = ResourceState.Loading()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                uploadProfileImageUseCase.execute(user)
+                withContext(Dispatchers.Main) {
+                    _uploadProfileImage.value = ResourceState.Success(null)
+                    _uploadProfileImage.value = ResourceState.None()
+                }
+            } catch (e: Exception) {
+                _uploadProfileImage.value = ResourceState.Error(e.localizedMessage.orEmpty())
+                _uploadProfileImage.value = ResourceState.None()
             }
         }
     }

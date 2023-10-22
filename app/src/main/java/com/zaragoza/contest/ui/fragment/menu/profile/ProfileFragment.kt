@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.zaragoza.contest.databinding.FragmentProfileBinding
 import com.zaragoza.contest.model.User
 import com.zaragoza.contest.ui.common.ResourceState
@@ -24,12 +25,11 @@ class ProfileFragment : Fragment() {
 
     private val userViewModel: UserViewModel by activityViewModel()
 
+    private var currentUser: User? = null
+
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val imageUri = result.data?.data
-                _binding?.ivUserImageProfileFragment?.setImageURI(imageUri)
-            }
+            handleImageResult(result.resultCode, result.data)
         }
 
     override fun onCreateView(
@@ -63,6 +63,7 @@ class ProfileFragment : Fragment() {
             }
 
             is ResourceState.Success -> {
+                currentUser = state.result
                 initUI(state.result)
             }
 
@@ -80,6 +81,11 @@ class ProfileFragment : Fragment() {
         _binding?.tvNicknameProfileFragment?.text = user.nickname
         _binding?.tvEmailProfileFragment?.text = user.email
         _binding?.tvScoreProfileFragment?.text = user.score.toString()
+        user.urlImage?.let { imageUrl ->
+            Glide.with(this)
+                .load(imageUrl)
+                .into(_binding?.ivUserImageProfileFragment!!)
+        }
 
         binding.btnChangeUserImageProfileFragment.setOnClickListener {
             openGallery()
@@ -91,9 +97,17 @@ class ProfileFragment : Fragment() {
         pickImageLauncher.launch(intent)
     }
 
+    private fun handleImageResult(resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            val imageUri = data?.data
+            _binding?.ivUserImageProfileFragment?.setImageURI(imageUri)
+            currentUser?.urlImage = imageUri.toString()
+            currentUser?.let { userViewModel.uploadProfileImage(it) }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }

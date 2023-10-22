@@ -12,6 +12,7 @@ import com.zaragoza.contest.R
 import com.zaragoza.contest.databinding.FragmentFinalScoreBinding
 import com.zaragoza.contest.model.User
 import com.zaragoza.contest.ui.common.ResourceState
+import com.zaragoza.contest.ui.viewmodel.EditUserState
 import com.zaragoza.contest.ui.viewmodel.GetUserInfoState
 import com.zaragoza.contest.ui.viewmodel.UserViewModel
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -24,6 +25,7 @@ class FinalScoreFragment : Fragment() {
     private val userViewModel: UserViewModel by activityViewModel()
 
     private var finalScore: Int? = 0
+    private var updatedUser: User? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +38,15 @@ class FinalScoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initUserViewModel()
+        userViewModel.getUserInfoLiveData.observe(viewLifecycleOwner) { state ->
+            handleGetUserInfoState(state)
+        }
 
+        userViewModel.editUserLiveData.observe(viewLifecycleOwner) { state ->
+            handleEditUserState(state)
+        }
+
+        initUserViewModel()
     }
 
     private fun initUserViewModel() {
@@ -51,23 +60,21 @@ class FinalScoreFragment : Fragment() {
     }
 
     private fun handleGetUserInfoState(state: GetUserInfoState) {
-
         finalScore = arguments?.getInt("finalScore")
 
         when (state) {
             is ResourceState.Loading -> {
-                //
+                // ...
             }
 
             is ResourceState.Success -> {
                 val user = state.result
-                if (user.score != null) {
-                    if (user.score!! < finalScore!!) {
-                        user.score = finalScore
-                        userViewModel.editUser(user)
-                    }
+                if (user.score != null && user.score!! < finalScore!!) {
+                    user.score = finalScore
+                    updatedUser = user
+                    userViewModel.editUser(user)
                 }
-                initUI(user, finalScore!!)
+                finalScore?.let { initUI(user, it) }
             }
 
             is ResourceState.Error -> {
@@ -75,7 +82,29 @@ class FinalScoreFragment : Fragment() {
             }
 
             is ResourceState.None -> {
-                //
+                // ...
+            }
+        }
+    }
+
+    private fun handleEditUserState(state: EditUserState) {
+        when (state) {
+            is ResourceState.Loading -> {
+                // ...
+            }
+
+            is ResourceState.Success -> {
+                if (updatedUser != null && finalScore != null) {
+                    initUI(updatedUser!!, finalScore!!)
+                }
+            }
+
+            is ResourceState.Error -> {
+                Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
+            }
+
+            is ResourceState.None -> {
+                // ...
             }
         }
     }
@@ -94,6 +123,11 @@ class FinalScoreFragment : Fragment() {
                     .build()
             )
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

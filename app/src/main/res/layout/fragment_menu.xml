@@ -26,5 +26,11 @@
         android:layout_height="wrap_content"
         android:text="Jugar" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_start_map_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mapa" />
+
 </androidx.appcompat.widget.LinearLayoutCompat>
 

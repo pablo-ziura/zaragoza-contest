@@ -1,6 +1,8 @@
 package com.zaragoza.contest.di
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.zaragoza.contest.data.question.QuestionDataRepository
 import com.zaragoza.contest.data.question.remote.QuestionRemoteImpl
 import com.zaragoza.contest.data.score.ScoreDataRepository
@@ -22,6 +24,7 @@ import com.zaragoza.contest.domain.usecase.user.EditUserUseCase
 import com.zaragoza.contest.domain.usecase.user.FetchUserIdUseCase
 import com.zaragoza.contest.domain.usecase.user.GetUserInfoUseCase
 import com.zaragoza.contest.domain.usecase.user.SaveUserIdUseCase
+import com.zaragoza.contest.domain.usecase.user.UploadProfileImageUseCase
 import com.zaragoza.contest.ui.viewmodel.QuestionViewModel
 import com.zaragoza.contest.ui.viewmodel.ScoreViewModel
 import com.zaragoza.contest.ui.viewmodel.UserViewModel
@@ -32,6 +35,7 @@ import org.koin.dsl.module
 val userModule = module {
 
     single { FirebaseAuth.getInstance() }
+    single { Firebase.storage.reference }
 
     factory {
         UserRemoteImpl(get())
@@ -51,9 +55,10 @@ val userModule = module {
     factory { EditUserUseCase(get()) }
     factory { SaveUserIdUseCase(get()) }
     factory { FetchUserIdUseCase(get()) }
+    factory { UploadProfileImageUseCase(get()) }
 
     viewModel {
-        UserViewModel(get(), get(), get(), get(), get(), get())
+        UserViewModel(get(), get(), get(), get(), get(), get(), get())
     }
 }
 
