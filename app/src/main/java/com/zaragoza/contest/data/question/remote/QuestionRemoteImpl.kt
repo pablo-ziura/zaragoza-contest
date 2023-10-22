@@ -5,14 +5,14 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.zaragoza.contest.BuildConfig
 import com.zaragoza.contest.model.Question
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class QuestionRemoteImpl {
 
-    private val database =
-        FirebaseDatabase.getInstance("https://zaragoza-contest-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val database = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
 
     suspend fun getQuestionList(): List<Question> = suspendCoroutine { continuation ->
         val questionRef = database.getReference("Questions")
@@ -32,7 +32,7 @@ class QuestionRemoteImpl {
 
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w("USER INFO", "getUserInfo:onCancelled", databaseError.toException())
-                continuation.resume(emptyList()) // You can choose how to handle errors here
+                continuation.resume(emptyList())
             }
         })
     }

@@ -11,17 +11,15 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.ktx.storage
+import com.zaragoza.contest.BuildConfig
 import com.zaragoza.contest.model.User
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class UserRemoteImpl(private val firebaseAuth: FirebaseAuth) {
-    private val database =
-        FirebaseDatabase.getInstance("https://zaragoza-contest-default-rtdb.europe-west1.firebasedatabase.app/")
-
+    private val database = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
     private val storageDatabaseRef = Firebase.storage.reference
-
 
     suspend fun createUser(user: User) {
         try {

@@ -55,10 +55,6 @@ class MenuFragment : Fragment() {
             sharedPreferences.edit().putInt("currentUserScore", 0).apply()
             findNavController().navigate(R.id.action_menuFragment_to_questionDetailFragment)
         }
-
-        binding.btnStartMapMenu.setOnClickListener {
-            findNavController().navigate(R.id.action_menuFragment_to_bonusQuestionMapFragment)
-        }
     }
 
     override fun onDestroyView() {

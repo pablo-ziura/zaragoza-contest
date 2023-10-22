@@ -84,7 +84,7 @@ class QuestionDetailFragment : Fragment() {
                     currentQuestion = question
                     initUI(question)
                 } else {
-                    navigateToFinalScoreFragment()
+                    navigateToBonusQuestionFragment()
                 }
             }
 
@@ -209,12 +209,12 @@ class QuestionDetailFragment : Fragment() {
         }
     }
 
-    private fun navigateToFinalScoreFragment() {
+    private fun navigateToBonusQuestionFragment() {
         val score = scoreViewModel.fetchCurrentScore()
         val bundle = Bundle()
         bundle.putInt("finalScore", score)
         findNavController().navigate(
-            R.id.action_questionDetailFragment_to_finalScoreFragment,
+            R.id.action_questionDetailFragment_to_bonusQuestionMapFragment,
             bundle
         )
     }

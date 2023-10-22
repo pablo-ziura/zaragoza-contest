@@ -16,9 +16,6 @@
         <action
             android:id="@+id/action_menuFragment_to_questionDetailFragment"
             app:destination="@id/questionDetailFragment" />
-        <action
-            android:id="@+id/action_menuFragment_to_bonusQuestionMapFragment"
-            app:destination="@id/bonusQuestionMapFragment" />
     </fragment>
 
     <fragment
@@ -33,8 +30,8 @@
         android:label="fragment_question_detail"
         tools:layout="@layout/fragment_question_detail">
         <action
-            android:id="@+id/action_questionDetailFragment_to_finalScoreFragment"
-            app:destination="@id/finalScoreFragment" />
+            android:id="@+id/action_questionDetailFragment_to_bonusQuestionMapFragment"
+            app:destination="@id/bonusQuestionMapFragment" />
     </fragment>
 
     <fragment
@@ -52,7 +49,11 @@
         android:id="@+id/bonusQuestionMapFragment"
         android:name="com.zaragoza.contest.ui.fragment.menu.game.BonusQuestionMapFragment"
         android:label="fragment_bonus_question_map"
-        tools:layout="@layout/fragment_bonus_question_map" />
+        tools:layout="@layout/fragment_bonus_question_map">
+        <action
+            android:id="@+id/action_bonusQuestionMapFragment_to_finalScoreFragment"
+            app:destination="@id/finalScoreFragment" />
+    </fragment>
 
 
 </navigation>

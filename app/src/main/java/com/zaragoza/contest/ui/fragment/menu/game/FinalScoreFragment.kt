@@ -12,8 +12,8 @@ import com.zaragoza.contest.R
 import com.zaragoza.contest.databinding.FragmentFinalScoreBinding
 import com.zaragoza.contest.model.User
 import com.zaragoza.contest.ui.common.ResourceState
-import com.zaragoza.contest.ui.viewmodel.EditUserState
 import com.zaragoza.contest.ui.viewmodel.GetUserInfoState
+import com.zaragoza.contest.ui.viewmodel.ScoreViewModel
 import com.zaragoza.contest.ui.viewmodel.UserViewModel
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
@@ -23,6 +23,7 @@ class FinalScoreFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val userViewModel: UserViewModel by activityViewModel()
+    private val scoreViewModel: ScoreViewModel by activityViewModel()
 
     private var finalScore: Int? = 0
     private var updatedUser: User? = null
@@ -38,15 +39,10 @@ class FinalScoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userViewModel.getUserInfoLiveData.observe(viewLifecycleOwner) { state ->
-            handleGetUserInfoState(state)
-        }
-
-        userViewModel.editUserLiveData.observe(viewLifecycleOwner) { state ->
-            handleEditUserState(state)
-        }
+        finalScore = scoreViewModel.fetchCurrentScore()
 
         initUserViewModel()
+
     }
 
     private fun initUserViewModel() {
@@ -60,7 +56,6 @@ class FinalScoreFragment : Fragment() {
     }
 
     private fun handleGetUserInfoState(state: GetUserInfoState) {
-        finalScore = arguments?.getInt("finalScore")
 
         when (state) {
             is ResourceState.Loading -> {
@@ -75,28 +70,6 @@ class FinalScoreFragment : Fragment() {
                     userViewModel.editUser(user)
                 }
                 finalScore?.let { initUI(user, it) }
-            }
-
-            is ResourceState.Error -> {
-                Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
-            }
-
-            is ResourceState.None -> {
-                // ...
-            }
-        }
-    }
-
-    private fun handleEditUserState(state: EditUserState) {
-        when (state) {
-            is ResourceState.Loading -> {
-                // ...
-            }
-
-            is ResourceState.Success -> {
-                if (updatedUser != null && finalScore != null) {
-                    initUI(updatedUser!!, finalScore!!)
-                }
             }
 
             is ResourceState.Error -> {
