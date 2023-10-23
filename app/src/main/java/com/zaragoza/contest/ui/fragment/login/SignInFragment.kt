@@ -56,10 +56,11 @@ class SignInFragment : Fragment() {
 
     private fun handleCheckUserState(state: CheckUserState) = when (state) {
         is ResourceState.Loading -> {
-            //
+            binding.spinnerSignInFragment.visibility = View.VISIBLE
         }
 
         is ResourceState.Success -> {
+            binding.spinnerSignInFragment.visibility = View.GONE
             val userId = state.result
             if (userId != null) {
                 when (userViewModel.saveUserId(userId)) {

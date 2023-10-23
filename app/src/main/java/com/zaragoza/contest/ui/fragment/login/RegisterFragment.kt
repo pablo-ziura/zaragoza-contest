@@ -35,7 +35,7 @@ class RegisterFragment : Fragment() {
 
         initViewModel()
 
-        _binding?.btnActionSignIn?.setOnClickListener {
+        _binding?.btnActionSignInFragment?.setOnClickListener {
             if (validateInputs()) {
                 createUser()
             }
@@ -51,10 +51,11 @@ class RegisterFragment : Fragment() {
     private fun handleUserCreationState(state: CreateUserState) {
         when (state) {
             is ResourceState.Loading -> {
-                //
+                binding.spinnerRegisterFragment.visibility = View.VISIBLE
             }
 
             is ResourceState.Success -> {
+                binding.spinnerRegisterFragment.visibility = View.VISIBLE
                 AlertDialog.Builder(requireContext())
                     .setTitle("Nuevo Usuario")
                     .setMessage("¡Usuario creado con éxito!")
@@ -75,8 +76,8 @@ class RegisterFragment : Fragment() {
     }
 
     private fun createUser() {
-        val userNickname = binding.tilEditNicknameRegister.text.toString()
-        val userPassword = binding.tilEditPasswordRegister.text.toString()
+        val userNickname = binding.tilEditNicknameRegisterFragment.text.toString()
+        val userPassword = binding.tilEditPasswordRegisterFragment.text.toString()
         val userEmail = binding.tilInputMailRegister.text.toString()
 
         userViewModel.createUser(
@@ -90,9 +91,9 @@ class RegisterFragment : Fragment() {
     }
 
     private fun validateInputs(): Boolean {
-        val userNickname = binding.tilEditNicknameRegister.text.toString()
-        val userPassword = binding.tilEditPasswordRegister.text.toString()
-        val userConfirmPassword = binding.tilConfirmPasswordRegister.text.toString()
+        val userNickname = binding.tilEditNicknameRegisterFragment.text.toString()
+        val userPassword = binding.tilEditPasswordRegisterFragment.text.toString()
+        val userConfirmPassword = binding.tilConfirmPasswordRegisterFragment.text.toString()
         val userEmail = binding.tilInputMailRegister.text.toString()
 
         if (userNickname.isBlank() || userPassword.isBlank() || userConfirmPassword.isBlank() || userEmail.isBlank()) {

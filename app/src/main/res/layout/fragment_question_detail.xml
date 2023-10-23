@@ -113,18 +113,6 @@
         app:layout_constraintTop_toBottomOf="@id/tv_current_score_info_fragment"
         tools:text="30" />
 
-    <!--    <com.google.android.material.progressindicator.LinearProgressIndicator-->
-    <!--        android:id="@+id/pb_time_question_info_fragment"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginHorizontal="32dp"-->
-    <!--        android:layout_marginTop="64dp"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/tv_result_info_fragment"-->
-    <!--        tools:progress="40" />-->
-
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_next_question_info_fragment"
         android:layout_width="match_parent"
@@ -133,5 +121,18 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:visibility="visible" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/spinner_question_detail_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="spinner_animation.json"
+        app:lottie_loop="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -59,10 +59,11 @@ class FinalScoreFragment : Fragment() {
 
         when (state) {
             is ResourceState.Loading -> {
-                // ...
+                binding.spinnerFinalScoreFragment.visibility = View.VISIBLE
             }
 
             is ResourceState.Success -> {
+                binding.spinnerFinalScoreFragment.visibility = View.GONE
                 val user = state.result
                 if (user.score != null && user.score!! < finalScore!!) {
                     user.score = finalScore

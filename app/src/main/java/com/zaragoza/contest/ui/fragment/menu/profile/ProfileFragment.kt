@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.zaragoza.contest.R
 import com.zaragoza.contest.databinding.FragmentProfileBinding
 import com.zaragoza.contest.model.User
 import com.zaragoza.contest.ui.common.ResourceState
@@ -59,10 +60,11 @@ class ProfileFragment : Fragment() {
     private fun handleGetUserInfoState(state: GetUserInfoState) {
         when (state) {
             is ResourceState.Loading -> {
-                //
+                binding.spinnerProfileFragment.visibility = View.VISIBLE
             }
 
             is ResourceState.Success -> {
+                binding.spinnerProfileFragment.visibility = View.GONE
                 currentUser = state.result
                 initUI(state.result)
             }
@@ -84,6 +86,8 @@ class ProfileFragment : Fragment() {
         user.urlImage?.let { imageUrl ->
             Glide.with(this)
                 .load(imageUrl)
+                .placeholder(R.drawable.ic_user)
+                .error(R.drawable.ic_user)
                 .into(_binding?.ivUserImageProfileFragment!!)
         }
 
