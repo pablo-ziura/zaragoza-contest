@@ -69,6 +69,7 @@ class SignInFragment : Fragment() {
                         val intent = Intent(requireContext(), MenuActivity::class.java)
                         startActivity(intent)
                     }
+
                     else -> {
                         Log.e("SignInFragment", "Error al guardar el User ID")
                     }

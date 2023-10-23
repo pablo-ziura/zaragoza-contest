@@ -1,11 +1,11 @@
 package com.zaragoza.contest.ui.fragment.login
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.zaragoza.contest.databinding.FragmentRegisterBinding
 import com.zaragoza.contest.model.User

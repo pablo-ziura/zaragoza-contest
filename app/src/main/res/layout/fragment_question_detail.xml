@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
+    android:background="#E8E8E8"
     tools:context=".ui.fragment.menu.game.QuestionDetailFragment">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -115,11 +116,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_next_question_info_fragment"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="SIGUIENTE PREGUNTA"
+        android:layout_marginBottom="8dp"
+        android:text="@string/btn_next_question_info_fragment"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible" />
 
     <com.airbnb.lottie.LottieAnimationView

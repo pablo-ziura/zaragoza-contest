@@ -10,4 +10,15 @@
     <string name="confirm_password_input">Confirmar password</string>
     <string name="nickname_input">Nickname</string>
     <string name="title_activity_scores">ScoresActivity</string>
+    <string name="btn_change_user_image_profile_fragment">Subir Foto</string>
+    <string name="btn_bonus_question_map_fragment">Contestar</string>
+    <string name="btn_next_question_info_fragment">SIGUIENTE PREGUNTA</string>
+    <string name="tv_title_final_score_fragment">Puntuación Final</string>
+    <string name="btn_back_menu_final_score_fragment">MENÚ</string>
+    <string name="btn_profile_menu">Perfil</string>
+    <string name="btn_best_scores_menu">Ranking</string>
+    <string name="btn_start_contest_menu">Nueva Partida</string>
+    <string name="tv_email_profile_fragment">e-mail: %s</string>
+    <string name="tv_score_profile_fragment">Máxima puntuación: %s puntos.</string>
+
 </resources>

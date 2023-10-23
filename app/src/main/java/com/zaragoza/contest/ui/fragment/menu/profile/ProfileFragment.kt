@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.zaragoza.contest.R
 import com.zaragoza.contest.databinding.FragmentProfileBinding
 import com.zaragoza.contest.model.User
@@ -81,13 +82,16 @@ class ProfileFragment : Fragment() {
 
     private fun initUI(user: User) {
         _binding?.tvNicknameProfileFragment?.text = user.nickname
-        _binding?.tvEmailProfileFragment?.text = user.email
-        _binding?.tvScoreProfileFragment?.text = user.score.toString()
+        _binding?.tvEmailProfileFragment?.text =
+            getString(R.string.tv_email_profile_fragment, user.email)
+        _binding?.tvScoreProfileFragment?.text =
+            getString(R.string.tv_score_profile_fragment, user.score.toString())
         user.urlImage?.let { imageUrl ->
             Glide.with(this)
                 .load(imageUrl)
                 .placeholder(R.drawable.ic_user)
                 .error(R.drawable.ic_user)
+                .transform(CircleCrop())
                 .into(_binding?.ivUserImageProfileFragment!!)
         }
 

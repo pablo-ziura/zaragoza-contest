@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="btn_start_contest_menu" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">#C81919</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:padding">16dp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:fontFamily">@font/bangers_regular</item>
+    </style>
+
+</resources>
