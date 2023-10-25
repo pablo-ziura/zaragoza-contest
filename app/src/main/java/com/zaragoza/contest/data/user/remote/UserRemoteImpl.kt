@@ -11,27 +11,33 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageException
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import com.zaragoza.contest.BuildConfig
+import com.zaragoza.contest.data.Constants.FIREBASE_DATABASE_URL
 import com.zaragoza.contest.model.User
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class UserRemoteImpl(private val firebaseAuth: FirebaseAuth) {
-    private val database = FirebaseDatabase.getInstance(BuildConfig.FIREBASE_DATABASE_URL)
-    private val storageDatabaseRef = Firebase.storage.reference
+class UserRemoteImpl(
+    private val firebaseAuth: FirebaseAuth,
+    private val database: FirebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_DATABASE_URL),
+    private val storageDatabaseRef: StorageReference = Firebase.storage.reference
+) {
 
-    suspend fun createUser(user: User) {
+    suspend fun createUser(user: User): User {
         try {
             val result =
                 firebaseAuth.createUserWithEmailAndPassword(user.email, user.password).await()
             val uid = result.user?.uid ?: throw IllegalStateException("UID no puede ser null")
-            user.id = uid
+
             val bcryptHash = BCrypt.withDefaults().hashToString(12, user.password.toCharArray())
-            user.password = bcryptHash
+            val newUser = user.copy(id = uid, password = bcryptHash)
+
             val userRef = database.getReference("Users").child(uid)
-            userRef.setValue(user).await()
+            userRef.setValue(newUser).await()
+
+            return newUser
         } catch (e: FirebaseAuthUserCollisionException) {
             Log.i("USER CREATION", "ERROR: El correo electrónico ya está en uso.")
             throw e
@@ -97,5 +103,4 @@ class UserRemoteImpl(private val firebaseAuth: FirebaseAuth) {
             throw e
         }
     }
-
 }

@@ -77,22 +77,36 @@ class SignInFragment : Fragment() {
                 val intent = Intent(requireContext(), MenuActivity::class.java)
                 startActivity(intent)
             } else {
-                Toast.makeText(requireContext(), "User ID null", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Usuario o contraseña incorrectos",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
 
         is ResourceState.Error -> {
+            binding.spinnerSignInFragment.visibility = View.GONE
             Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
         }
 
         is ResourceState.None -> {
-            // No hacer nada
+            binding.spinnerSignInFragment.visibility = View.GONE
         }
     }
 
     private fun checkUser() {
         val userPassword = binding.tilInputPasswordRegister.text.toString()
         val userEmail = binding.tilInputMailRegister.text.toString()
+
+        if (userEmail.isBlank() || userPassword.isBlank()) {
+            Toast.makeText(
+                requireContext(),
+                "Por favor, rellene todos los campos",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
 
         userViewModel.checkUser(userEmail = userEmail, userPassword = userPassword)
     }
@@ -101,5 +115,4 @@ class SignInFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Zaragoza Contest</string>
+    <string name="app_name">ZaraTrivia</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="email_input">Correo Electrónico</string>
     <string name="password_input">Password</string>
@@ -13,12 +13,18 @@
     <string name="btn_change_user_image_profile_fragment">Subir Foto</string>
     <string name="btn_bonus_question_map_fragment">Contestar</string>
     <string name="btn_next_question_info_fragment">SIGUIENTE PREGUNTA</string>
-    <string name="tv_title_final_score_fragment">Puntuación Final</string>
+    <string name="tv_title_final_score_fragment">Puntuación Final:</string>
     <string name="btn_back_menu_final_score_fragment">MENÚ</string>
     <string name="btn_profile_menu">Perfil</string>
     <string name="btn_best_scores_menu">Ranking</string>
     <string name="btn_start_contest_menu">Nueva Partida</string>
     <string name="tv_email_profile_fragment">e-mail: %s</string>
-    <string name="tv_score_profile_fragment">Máxima puntuación: %s puntos.</string>
-
+    <string name="tv_score_profile_fragment">Máxima puntuación: %s puntos</string>
+    <string name="current_mark_final_score_fragment">%1$d puntos</string>
+    <string name="max_mark_final_score_fragment">Máxima puntuación: %1$s puntos</string>
+    <string name="max_mark_obtained_final_score_fragment">¡Nueva puntuación máxima!</string>
+    <string name="alert_title_explanation_bonus_question_fragment">PUNTUACIÓN EXTRA</string>
+    <string name="alert_message_explanation_bonus_question_fragment">Aunque un guardia civil puede encontrarse en muchas vitrinas de la ciudad, su origen se sitúa en el bar El Lince, situado en la plaza Santa Marta, donde lleva haciéndose desde hace más de 50 años.\nTe has equivocado por %1$d metros y la puntuación obtenida es de %2$d puntos.</string>
+    <string name="alert_title_answer_bonus_question_fragment">¡PREGUNTA BONUS!</string>
+    <string name="alert_message_answer_bonus_question_fragment">Solo hay un lugar de Zaragoza donde encontrarse con un guardia civil es sinónimo de alegría.\n¿Serías capaz de ubicarlo en el mapa?\nRecuerda, cuanto más te acerques, ¡mayor será tu puntuación!</string>
 </resources>

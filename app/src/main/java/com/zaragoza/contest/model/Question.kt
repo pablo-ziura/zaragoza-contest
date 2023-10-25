@@ -12,5 +12,5 @@ data class Question(
     val thirdAnswer: String = "",
     val fourthAnswer: String = "",
     val rightAnswer: Int = -1,
-    val isSolved: Int = -1
+    val answerDescription: String = ""
 ) : Parcelable

@@ -17,14 +17,8 @@ android {
         applicationId = "com.zaragoza.contest"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-
-        buildConfigField(
-            "String",
-            "FIREBASE_DATABASE_URL",
-            "\"${project.property("FIREBASE_DATABASE_URL")}\""
-        )
+        versionCode = 3
+        versionName = "1.0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -110,4 +104,7 @@ dependencies {
     implementation("at.favre.lib:bcrypt:0.10.2")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.airbnb.android:lottie:6.1.0")
+
+    implementation("io.coil-kt:coil-compose:1.4.0")
+
 }

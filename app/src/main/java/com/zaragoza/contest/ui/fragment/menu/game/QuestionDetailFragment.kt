@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.zaragoza.contest.R
@@ -23,6 +24,15 @@ class QuestionDetailFragment : Fragment() {
     private var _binding: FragmentQuestionDetailBinding? = null
     private val binding get() = _binding!!
 
+    private val questionTextViews by lazy {
+        listOf(
+            binding.tvQuestionNrOneInfoFragment,
+            binding.tvQuestionNrTwoInfoFragment,
+            binding.tvQuestionNrThreeInfoFragment,
+            binding.tvQuestionNrFourInfoFragment
+        )
+    }
+
     private val questionViewModel: QuestionViewModel by activityViewModel()
     private val scoreViewModel: ScoreViewModel by activityViewModel()
 
@@ -31,7 +41,7 @@ class QuestionDetailFragment : Fragment() {
     private var lastScore: Int = 0
 
     companion object {
-        const val TOTAL_TIME = 10500L
+        const val TOTAL_TIME = 20500L
         const val MIN_SCORE = 1000
         const val MAX_SCORE = 5000
     }
@@ -82,11 +92,12 @@ class QuestionDetailFragment : Fragment() {
             }
 
             is ResourceState.Error -> {
+                binding.spinnerQuestionDetailFragment.visibility = View.GONE
                 Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
             }
 
             is ResourceState.None -> {
-                //
+                binding.spinnerQuestionDetailFragment.visibility = View.GONE
             }
         }
     }
@@ -106,6 +117,8 @@ class QuestionDetailFragment : Fragment() {
             tvQuestionNrTwoInfoFragment.text = question.secondAnswer
             tvQuestionNrThreeInfoFragment.text = question.thirdAnswer
             tvQuestionNrFourInfoFragment.text = question.fourthAnswer
+
+            questionTextViews.forEach { it.isClickable = true }
         }
     }
 
@@ -130,15 +143,11 @@ class QuestionDetailFragment : Fragment() {
             updateUIWithResult(isCorrect, score)
         }
 
-        binding.tvQuestionNrOneInfoFragment.setOnClickListener(clickListener)
-        binding.tvQuestionNrTwoInfoFragment.setOnClickListener(clickListener)
-        binding.tvQuestionNrThreeInfoFragment.setOnClickListener(clickListener)
-        binding.tvQuestionNrFourInfoFragment.setOnClickListener(clickListener)
+        questionTextViews.forEach { it.setOnClickListener(clickListener) }
     }
 
     private fun setupTimer() {
         timer?.cancel()
-
         timer = object : CountDownTimer(TOTAL_TIME, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val remainingSeconds = millisUntilFinished / 1000
@@ -161,10 +170,14 @@ class QuestionDetailFragment : Fragment() {
             "Respuesta incorrecta."
         }
 
-        val scoreMessage = "Tu puntuación es $score."
+        currentQuestion?.let { showAlertDialog(resultMessage, it.answerDescription) }
+
+        val scoreMessage = "Has obtenido $score puntos"
 
         binding.tvResultInfoFragment.text = resultMessage
         binding.tvCurrentScoreInfoFragment.text = scoreMessage
+
+        questionTextViews.forEach { it.isClickable = false }
 
         binding.tvResultInfoFragment.visibility = View.VISIBLE
         binding.tvCurrentScoreInfoFragment.visibility = View.VISIBLE
@@ -176,9 +189,9 @@ class QuestionDetailFragment : Fragment() {
             scoreViewModel.updateCurrentUserScore(lastScore)
             questionViewModel.getNextQuestion()
             setupTimer()
-            binding.tvResultInfoFragment.visibility = View.GONE
-            binding.tvCurrentScoreInfoFragment.visibility = View.GONE
-            binding.btnNextQuestionInfoFragment.visibility = View.GONE
+            binding.tvResultInfoFragment.visibility = View.INVISIBLE
+            binding.tvCurrentScoreInfoFragment.visibility = View.INVISIBLE
+            binding.btnNextQuestionInfoFragment.visibility = View.INVISIBLE
         }
     }
 
@@ -210,6 +223,22 @@ class QuestionDetailFragment : Fragment() {
 
         val timeLeft = TOTAL_TIME - timeElapsed
         return MIN_SCORE + ((timeLeft.toFloat() / timeRange) * scoreRange).toInt()
+    }
+
+    private fun showAlertDialog(
+        title: String,
+        message: String,
+        onPositiveClick: (() -> Unit)? = null
+    ) {
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Aceptar") { dialog, _ ->
+                dialog.dismiss()
+                onPositiveClick?.invoke()
+            }
+            .create()
+        alertDialog.show()
     }
 
     override fun onDestroyView() {

@@ -77,7 +77,8 @@ class UserViewModel(
                     if (userId != null) {
                         _checkUserLiveData.value = ResourceState.Success(userId)
                     } else {
-                        _checkUserLiveData.value = ResourceState.Error("User ID null")
+                        _checkUserLiveData.value =
+                            ResourceState.Error("Usuario o contraseña incorrectos")
                     }
                     _checkUserLiveData.value = ResourceState.None()
                 }

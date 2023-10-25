@@ -71,11 +71,12 @@ class ProfileFragment : Fragment() {
             }
 
             is ResourceState.Error -> {
+                binding.spinnerProfileFragment.visibility = View.GONE
                 Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
             }
 
             is ResourceState.None -> {
-                //
+                binding.spinnerProfileFragment.visibility = View.GONE
             }
         }
     }

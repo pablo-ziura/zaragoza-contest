@@ -61,10 +61,12 @@ class BonusQuestionMapFragment : Fragment(), OnMapReadyCallback {
 
         initializeMap(googleMap, zaragozaCenter)
 
-        showAlertDialog(
-            "¡PREGUNTA BONUS!",
-            "Solo hay un lugar de Zaragoza donde encontrarse con un guardia civil es sinónimo de alegría.\n¿Serías capaz de ubicarlo en el mapa?\nRecuerda, cuanto más te acerques, ¡mayor será tu puntuación!"
-        )
+        val titleDialog: String =
+            getString(R.string.alert_title_answer_bonus_question_fragment)
+        val messageDialog: String =
+            getString(R.string.alert_message_answer_bonus_question_fragment)
+
+        showAlertDialog(titleDialog, messageDialog)
 
         googleMap.setOnMapClickListener { latLng ->
             placeUserMarker(googleMap, latLng)
@@ -127,10 +129,16 @@ class BonusQuestionMapFragment : Fragment(), OnMapReadyCallback {
 
         drawPolyline(googleMap, secretPlace, userMarker!!.position)
 
-        showAlertDialog(
-            "PUNTUACIÓN EXTRA",
-            "Aunque un guardia civil puede encontrarse en muchas vitrinas de la ciudad, su origen se sitúa en el bar El Lince, situado en la plaza Santa Marta, donde lleva haciéndose desde hace más de 50 años.\nTe has equivocado por ${distance.roundToInt()} metros y la puntuación obtenida es de $score puntos."
-        ) {
+        val titleDialog: String =
+            getString(R.string.alert_title_explanation_bonus_question_fragment)
+        val messageDialog: String =
+            getString(
+                R.string.alert_message_explanation_bonus_question_fragment,
+                distance.toInt(),
+                score
+            )
+
+        showAlertDialog(titleDialog, messageDialog) {
             findNavController().navigate(R.id.action_bonusQuestionMapFragment_to_finalScoreFragment)
         }
     }
@@ -157,7 +165,6 @@ class BonusQuestionMapFragment : Fragment(), OnMapReadyCallback {
                 onPositiveClick?.invoke()
             }
             .create()
-
         alertDialog.show()
     }
 

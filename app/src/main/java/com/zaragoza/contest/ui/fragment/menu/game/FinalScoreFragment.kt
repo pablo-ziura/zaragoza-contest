@@ -74,19 +74,28 @@ class FinalScoreFragment : Fragment() {
             }
 
             is ResourceState.Error -> {
+                binding.spinnerFinalScoreFragment.visibility = View.GONE
                 Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
             }
 
             is ResourceState.None -> {
-                // ...
+                binding.spinnerFinalScoreFragment.visibility = View.GONE
             }
         }
     }
 
     private fun initUI(user: User, score: Int) {
 
-        binding.tvPointsFinalScoreFragment.text = score.toString()
-        binding.tvMaxFinalScoreFragment.text = user.score.toString()
+        binding.tvPointsFinalScoreFragment.text =
+            getString(R.string.current_mark_final_score_fragment, score)
+
+        if (score > (user.score ?: 0)) {
+            binding.tvMaxFinalScoreFragment.text =
+                getString(R.string.max_mark_obtained_final_score_fragment)
+        } else {
+            binding.tvMaxFinalScoreFragment.text =
+                getString(R.string.max_mark_final_score_fragment, user.score.toString())
+        }
 
         binding.btnBackMenuFinalScoreFragment.setOnClickListener {
             findNavController().navigate(

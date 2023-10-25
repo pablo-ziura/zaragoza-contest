@@ -66,11 +66,12 @@ class RegisterFragment : Fragment() {
             }
 
             is ResourceState.Error -> {
+                binding.spinnerRegisterFragment.visibility = View.GONE
                 Toast.makeText(requireContext(), state.error, Toast.LENGTH_LONG).show()
             }
 
             is ResourceState.None -> {
-                //
+                binding.spinnerRegisterFragment.visibility = View.GONE
             }
         }
     }
@@ -130,5 +131,4 @@ class RegisterFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

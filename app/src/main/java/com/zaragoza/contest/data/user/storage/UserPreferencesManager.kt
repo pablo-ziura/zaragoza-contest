@@ -13,6 +13,5 @@ class UserPreferencesManager(context: Context) {
     fun fetchUserId(): String? {
         return sharedPreferences.getString("USER_ID", null)
     }
-
 }
 
