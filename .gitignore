@@ -1,0 +1,28 @@
+*.iml
+.gradle
+/local.properties
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+/build.gradle.kts
+/app/proguard-rules.pro
+/settings.gradle.kts
+
+# Gradle & build
+.gradle/
+*/build/
+app/.gradle/
+
+# Release/binary artifacts
+app/release/
+
+# IDE settings
+.idea/
+
+# Local configuration
+local.properties
+
+#Others
+/app/src/main/java/com/zaragoza/contest/data/Constants.kt
