@@ -1,28 +1,10 @@
-*.iml
-.gradle
-/local.properties
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-/build.gradle.kts
-/app/proguard-rules.pro
-/settings.gradle.kts
-
-# Gradle & build
+# Ignore Gradle build directory and local configuration
 .gradle/
-*/build/
-app/.gradle/
-
-# Release/binary artifacts
-app/release/
-
-# IDE settings
-.idea/
-
-# Local configuration
+**/build/
 local.properties
+
+# IDE files
+.idea/
 
 #Others
 /app/src/main/java/com/zaragoza/contest/data/Constants.kt
