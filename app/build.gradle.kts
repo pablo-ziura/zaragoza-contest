@@ -81,7 +81,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:19.2.0")
 
     /* --- Firebase --- */
-    implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
