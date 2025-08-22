@@ -21,14 +21,14 @@ kotlin {
 
 android {
     namespace = "com.zaragoza.contest"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.zaragoza.contest"
         minSdk = 28
-        targetSdk = 35
-        versionCode = 4
-        versionName = "1.0.2"
+        targetSdk = 36
+        versionCode = 5
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
